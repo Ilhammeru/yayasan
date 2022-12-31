@@ -9,82 +9,6 @@
             <a href="page_ready_chat.html" class="sidebar-title">
                 <i class="gi gi-comments pull-right"></i> <strong>Chat</strong>UI
             </a>
-            <!-- Chat Users -->
-            <ul class="chat-users clearfix">
-                <li>
-                    <a href="javascript:void(0)" class="chat-user-online">
-                        <span></span>
-                        <img src="{{ asset('assets/img/placeholders/avatars/avatar12.jpg') }}" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" class="chat-user-online">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar15.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" class="chat-user-online">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar10.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" class="chat-user-online">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar4.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" class="chat-user-away">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar7.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" class="chat-user-away">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar9.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" class="chat-user-busy">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar16.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar1.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar4.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar3.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar13.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">
-                        <span></span>
-                        <img src="img/placeholders/avatars/avatar5.jpg" alt="avatar" class="img-circle">
-                    </a>
-                </li>
-            </ul>
-            <!-- END Chat Users -->
 
             <!-- Chat Talk -->
             <div class="chat-talk display-none">
@@ -264,7 +188,7 @@
             <!-- Sidebar Navigation -->
             <ul class="sidebar-nav">
                 <li>
-                    <a href="index.html" class=" active"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
+                    <a href="index.html"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
                 </li>
                 {{-- <li>
                     <a href="index2.html"><i class="gi gi-leaf sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard 2</span></a>
@@ -298,7 +222,7 @@
                     <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="gi gi-settings"></i></a><a href="javascript:void(0)" data-toggle="tooltip" title="Create the most amazing pages with the widget kit!"><i class="gi gi-lightbulb"></i></a></span>
                     <span class="sidebar-header-title">Settings</span>
                 </li>
-                <li>
+                <li class="{{ active_sidebar_parent(['intitutions.index', 'roles.index', 'positions.index', 'employees.index']) }}">
                     <a href="#" class="sidebar-nav-menu">
                         <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
                         <i class="gi gi-database_lock sidebar-nav-icon"></i>
@@ -306,13 +230,28 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="page_ui_grid_blocks.html">Grid &amp; Blocks</a>
+                            <a class="{{ active_sidebar_parent(['intitutions.index']) }}" href="{{ route('intitutions.index') }}">{{ __('view.intitutions') }}</a>
+                        </li>
+                        <li>
+                            <a class="{{ active_sidebar_parent(['roles.index']) }}" href="{{ route('roles.index') }}">{{ __('view.role') }}</a>
+                        </li>
+                        <li>
+                            <a class="{{ active_sidebar_parent(['positions.index']) }}" href="{{ route('positions.index') }}">{{ __('view.position') }}</a>
+                        </li>
+                        <li>
+                            <a class="{{ active_sidebar_parent(['employees.index']) }}" href="{{ route('employees.index') }}">Staff</a>
+                        </li>
+                        <li>
+                            <a class="{{ active_sidebar_parent([]) }}" href="#">User</a>
+                        </li>
+                        <li>
+                            <a class="{{ active_sidebar_parent([]) }}" href="#">Account</a>
                         </li>
                     </ul>
                 </li>
                 <!-- begin::master-data -->
 
-                <li class="sidebar-header">
+                <!-- <li class="sidebar-header">
                     <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="gi gi-settings"></i></a><a href="javascript:void(0)" data-toggle="tooltip" title="Create the most amazing pages with the widget kit!"><i class="gi gi-lightbulb"></i></a></span>
                     <span class="sidebar-header-title">Widget Kit</span>
                 </li>
@@ -452,8 +391,8 @@
                             <a href="page_layout_static_animated.html">Animated Sidebar Transitions</a>
                         </li>
                     </ul>
-                </li>
-                <li class="sidebar-header">
+                </li> -->
+                <!-- <li class="sidebar-header">
                     <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="gi gi-settings"></i></a></span>
                     <span class="sidebar-header-title">Develop Kit</span>
                 </li>
@@ -637,12 +576,12 @@
                             <a href="page_comp_syntax_highlighting.html">Syntax Highlighting</a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
             </ul>
             <!-- END Sidebar Navigation -->
 
             <!-- Sidebar Notifications -->
-            <div class="sidebar-header sidebar-nav-mini-hide">
+            <!-- <div class="sidebar-header sidebar-nav-mini-hide">
                 <span class="sidebar-header-options clearfix">
                     <a href="javascript:void(0)" data-toggle="tooltip" title="Refresh"><i class="gi gi-refresh"></i></a>
                 </span>
@@ -665,7 +604,7 @@
                     <small>Yesterday</small><br>
                     <i class="fa fa-bug fa-fw"></i> <a href="javascript:void(0)"><strong>New bug submitted</strong></a>
                 </div>
-            </div>
+            </div> -->
             <!-- END Sidebar Notifications -->
         </div>
         <!-- END Sidebar Content -->

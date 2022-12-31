@@ -962,6 +962,9 @@ a.sidebar-title:focus {
     margin: -20px -15px 20px;
     background-color: #f9fafc;
     border-bottom: 1px solid #eaedf1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .block-title h1,
@@ -3645,6 +3648,8 @@ p, .table, .alert, .carousel {
 .style-alt .block-title {
     background-color: #dbe1e8;
     border-bottom-color: #dbe1e8;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .style-alt .content-header + .breadcrumb-top,

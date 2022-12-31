@@ -41,24 +41,18 @@ Table intitutions {
     updated_at timestamp
 }
 
-Table class {
+Table institution_class {
     id int [pk, increment]
+    intitution_id int [ref: > intitutions.id]
     name varchar(255) [not null]
     created_at timestamp
     updated_at timestamp
 }
 
-Table level {
+Table institutions_class_level {
     id int [pk, increment]
+    institution_class_id int [ref: > intitution_class.id]
     name varchar(10)
-    created_at timestamp
-    updated_at timestamp
-}
-
-Table class_level {
-    id int [pk, increment]
-    class_id int [ref: > class.id]
-    level_id int [ref: > level.id]
     created_at timestamp
     updated_at timestamp
 }

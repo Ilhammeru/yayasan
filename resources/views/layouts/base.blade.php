@@ -10,6 +10,8 @@
         <meta name="author" content="pixelcave">
         <meta name="robots" content="noindex, nofollow">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Icons -->
         <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
@@ -34,14 +36,61 @@
         <!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
         <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
 
+        {{-- iziToast --}}
+        <link rel="stylesheet" href="{{ asset('assets/plugins/izitoast/dist/css/iziToast.min.css') }}">
+
         <!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
 
         <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
         <link rel="stylesheet" href="{{ asset('assets/css/themes.css') }}">
         <!-- END Stylesheets -->
 
+        <style>
+            .dataTables_scrollHeadInner {
+                width: 100% !important;
+            }
+
+            .dataTables_scrollHeadInner > table {
+                width: 100% !important;
+            }
+            .dataTables_scrollBody {
+                width: 100% !important;
+            }
+            .dataTables_scrollBody > .table {
+                width: 100% !important;
+            }
+            .dataTables_empty {
+                text-align: center !important;
+            }
+            .border {
+                border: 1px solid #e6e6e6;
+            }
+            .p-3 {
+                padding: 10px;
+            }
+            .mb-3 {
+                margin-bottom: 10px;
+            }
+            .d-none {
+                display: none;
+            }
+            .select2-container {
+                width: 100% !important;
+            }
+
+            .no-border {
+                border: 0;
+            }
+        </style>
+
+        @stack('styles')
+
         <!-- Modernizr (browser feature detection library) -->
         <script src="{{ asset('assets/js/vendor/modernizr.min.js') }}"></script>
+        <script src="{{ asset('assets/js/jquery.js') }}"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     </head>
     <body>
         <!-- Page Wrapper -->
@@ -110,6 +159,19 @@
                     <!-- Page content -->
                     <div id="page-content">
 
+                        <!-- begin::content-header -->
+                        {{-- <div class="content-header">
+                            <div class="header-section">
+                                <h1>
+                                    <i class="fa fa-table"></i>Datatables<br><small>HTML tables can become fully dynamic with cool features!</small>
+                                </h1>
+                            </div>
+                        </div> --}}
+                        <ul class="breadcrumb breadcrumb-top">
+                            {!! config('app.breadcrumb') !!}
+                        </ul>
+                        <!-- end::content-header -->
+
                         @yield('content')
                         
                     </div>
@@ -129,17 +191,42 @@
         <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
 
         <!-- jQuery, Bootstrap.js, jQuery plugins and Custom JS code -->
-        <script src="{{ asset('assets/js/vendor/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/js/vendor/bootstrap.min.js') }}"></script>
         <script src="{{ asset('assets/js/plugins.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
+        <script src="{{ asset('assets/plugins/izitoast/dist/js/iziToast.min.js') }}"></script>
+        <script src="{{ asset('assets/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
 
         <!-- Google Maps API Key (you will have to obtain a Google Maps API key to use Google Maps) -->
         <!-- For more info please have a look at https://developers.google.com/maps/documentation/javascript/get-api-key#key -->
         {{-- <script src="https://maps.googleapis.com/maps/api/js?key="></script>
         <script src="js/helpers/gmaps.min.js"></script> --}}
 
-        <script>$(function(){ Index.init(); });</script>
+        {{-- custom scripts --}}
+        <script src="{{ asset('dist/js/base.js') }}"></script>
+        <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            const base_url = window.location.origin;
+
+            function closeModal(id) {
+                $('#' + id).modal('hide');
+            }
+
+            function disableButton(id, isDisable = true) {
+                $(`#${id}`).prop('disabled', isDisable);
+            }
+
+            function regexNumber(e) {
+                let val = e.value;
+                val = val.replace(/\D+/, '');
+                e.value = val;
+            }
+        </script>
 
         @stack('scripts')
     </body>

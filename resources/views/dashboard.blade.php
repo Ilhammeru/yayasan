@@ -135,12 +135,12 @@
                                     <div class="row push">
                                         <div class="col-sm-6 col-md-4">
                                             <a href="img/placeholders/photos/photo1.jpg" data-toggle="lightbox-image">
-                                                <img src="img/placeholders/photos/photo1.jpg" alt="image">
+                                                <img src="{{ asset('assets/img/placeholders/photos/photo1.jpg') }}" alt="image">
                                             </a>
                                         </div>
                                         <div class="col-sm-6 col-md-4">
                                             <a href="img/placeholders/photos/photo22.jpg" data-toggle="lightbox-image">
-                                                <img src="img/placeholders/photos/photo22.jpg" alt="image">
+                                                <img src="{{ asset('assets/img/placeholders/photos/photo22.jpg') }}" alt="image">
                                             </a>
                                         </div>
                                     </div>
@@ -172,7 +172,7 @@
                                     <div class="row push">
                                         <div class="col-sm-6 col-md-4">
                                             <a href="img/placeholders/photos/photo23.jpg" data-toggle="lightbox-image">
-                                                <img src="img/placeholders/photos/photo23.jpg" alt="image">
+                                                <img src="{{ asset('assets/img/placeholders/photos/photo23.jpg') }}" alt="image">
                                             </a>
                                         </div>
                                     </div>
@@ -290,7 +290,7 @@
                     <!-- Widget Header -->
                     <div class="widget-header text-left">
                         <!-- For best results use an image with at least 150 pixels in height (with the width relative to how big your widget will be!) - Here I'm using a 1200x150 pixels image -->
-                        <img src="img/placeholders/headers/widget5_header.jpg" alt="background" class="widget-background animation-pulseSlow">
+                        <img src="{{ asset('assets/img/placeholders/headers/widget5_header.jpg') }}" alt="background" class="widget-background animation-pulseSlow">
                         <h3 class="widget-content widget-content-image widget-content-light clearfix">
                             <span class="widget-icon pull-right">
                                 <i class="fa fa-sun-o animation-pulse"></i>
@@ -356,22 +356,22 @@
                             <div class="row">
                                 <div class="col-xs-6 col-sm-3">
                                     <a href="img/placeholders/photos/photo15.jpg" class="gallery-link" title="Image Info">
-                                        <img src="img/placeholders/photos/photo15.jpg" alt="image">
+                                        <img src="{{ asset('assets/img/placeholders/photos/photo15.jpg') }}" alt="image">
                                     </a>
                                 </div>
                                 <div class="col-xs-6 col-sm-3">
                                     <a href="img/placeholders/photos/photo5.jpg" class="gallery-link" title="Image Info">
-                                        <img src="img/placeholders/photos/photo5.jpg" alt="image">
+                                        <img src="{{ asset('assets/img/placeholders/photos/photo5.jpg') }}" alt="image">
                                     </a>
                                 </div>
                                 <div class="col-xs-6 col-sm-3">
                                     <a href="img/placeholders/photos/photo6.jpg" class="gallery-link" title="Image Info">
-                                        <img src="img/placeholders/photos/photo6.jpg" alt="image">
+                                        <img src="{{ asset('assets/img/placeholders/photos/photo6.jpg') }}" alt="image">
                                     </a>
                                 </div>
                                 <div class="col-xs-6 col-sm-3">
                                     <a href="img/placeholders/photos/photo13.jpg" class="gallery-link" title="Image Info">
-                                        <img src="img/placeholders/photos/photo13.jpg" alt="image">
+                                        <img src="{{ asset('assets/img/placeholders/photos/photo13.jpg') }}" alt="image">
                                     </a>
                                 </div>
                             </div>
@@ -387,5 +387,6 @@
 @endsection
 
 @push('scripts')
-<script src="js/pages/index.js"></script>
+<script src="{{ asset('assets/js/pages/index.js') }}"></script>
+<script>$(function(){ Index.init(); });</script>
 @endpush

@@ -8,6 +8,8 @@
  *  sure to remove its initialization from uiInit().
  */
 
+const { default: iziToast } = require("izitoast");
+
 var App = function() {
     /* Helper variables - set in uiInit() */
     var page, pageContent, header, footer, sidebar, sScroll, sidebarAlt, sScrollAlt;
@@ -90,7 +92,7 @@ var App = function() {
         $('.select-chosen').chosen({width: "100%"});
 
         // Initialize Select2
-        $('.select-select2').select2();
+        // $('.select-select2').select2();
 
         // Initialize Bootstrap Colorpicker
         $('.input-colorpicker').colorpicker({format: 'hex'});
