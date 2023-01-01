@@ -205,6 +205,7 @@
         {{-- custom scripts --}}
         <script src="{{ mix('dist/js/base.js') }}"></script>
         <script>
+            handleSidebar('init');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

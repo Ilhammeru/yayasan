@@ -19,6 +19,7 @@ return [
     'status_required' => 'Status field is required',
     'nip_required' => 'NIP field is required',
     'phone_required' => 'Pbone field is required',
+    'group_required' => 'Group field is required',
     'address_required' => 'Address field is required',
     'district_id_required' => 'District field is required',
     'city_id_required' => 'City field is required',
@@ -61,4 +62,9 @@ return [
     'cannot_continue_bcs_position' =>  "You don't have any active Positions. Make it first to continue this process.",
     'cannot_continue_bcs_pos_and_inst' =>  "You don't have any active Positions and Institutions. Make it first to continue this process.",
     'password_hint' => "Leave it blank if you don't want to change the current password",
+    'permissions' => 'Permissions',
+    'permission_list' => 'Permission List',
+    'create_permission' => 'Create Permission',
+    'update_permission' => 'Update Permission',
+    'permission_group' => 'Group',
 ];

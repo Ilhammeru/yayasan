@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('intitutions', 'IntitutionController');
     Route::get('roles/ajax', 'RoleController@ajax')->name('roles.ajax');
     Route::resource('roles', 'RoleController');
+    Route::get('permissions/ajax', 'PermissionController@ajax')->name('permissions.ajax');
+    Route::resource('permissions', 'PermissionController');
     Route::get('positions/ajax', 'PositionController@ajax')->name('positions.ajax');
     Route::resource('positions', 'PositionController');
     Route::get('employees/ajax', 'EmployeesController@ajax')->name('employees.ajax');

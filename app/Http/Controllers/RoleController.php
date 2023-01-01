@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\PermissionService;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
@@ -21,7 +22,7 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
         breadcrumb([
             [
                 'name' => __('view.intitutions'),
@@ -67,7 +68,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $view = view($this->vp . '.form')->render();
+        $s = new PermissionService();
+        $permissions = $s->get_permission_group();
+        $view = view($this->vp . '.form', compact('permissions'))->render();
         return response()->json(['message' => 'Success', 'view' => $view]);
     }
 

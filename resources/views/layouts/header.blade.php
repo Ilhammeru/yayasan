@@ -16,7 +16,7 @@
     <ul class="nav navbar-nav-custom">
         <!-- Main Sidebar Toggle Button -->
         <li>
-            <a href="javascript:void(0)" onclick="App.sidebar('toggle-sidebar');this.blur();">
+            <a href="javascript:void(0)" onclick="handleSidebar('toggle-sidebar');this.blur();">
                 <i class="fa fa-bars fa-fw"></i>
             </a>
         </li>
