@@ -130,7 +130,7 @@ function getCity(e, fromEdit = null) {
             $('#city_id').chosen({width: "100%"});
         },
         error: function(err) {
-            App.setNotif(true, err);
+            showNotif(true, err);
         }
     })
 }
@@ -170,7 +170,7 @@ function getDistrict(e, fromEdit = null) {
             $('#district_id').chosen({width: "100%"});
         },
         error: function(err) {
-            App.setNotif(true, err);
+            showNotif(true, err);
         }
     })
 }

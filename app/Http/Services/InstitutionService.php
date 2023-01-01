@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Models\Employees;
 use App\Models\InstitutionClass;
 use App\Models\InstitutionClassLevel;
 use App\Models\Intitution;
@@ -15,9 +16,6 @@ class InstitutionService {
     public function store($request, $id = 0)
     {  
         $model = new Intitution();
-        if ($id != 0) {
-            $model = Intitution::find($id);
-        }
         $model->name = $request->name;
         if (!$request->has('status')) {
             $model->status = false;
@@ -55,6 +53,15 @@ class InstitutionService {
             if (isset($levels)) {
                 InstitutionClassLevel::insert($levels);
             }
+        }
+
+        // update current relation employee
+        if ($id != 0) {
+            Employees::where('institution_id', $id)
+                ->update([
+                    'institution_id' => $model->id,
+                    'updated_at' => Carbon::now()
+                ]);
         }
     }
 }

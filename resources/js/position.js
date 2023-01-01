@@ -1,4 +1,4 @@
-dtIntegration();
+dtIntegration(); 
 
 let columns = [
     {data: 'id',
@@ -13,7 +13,7 @@ let columns = [
     {data: 'action', name: 'action', className: 'text-center', orderable: false},
 ];
 let dt_route = base_url + '/positions/ajax'
-let dt_position = App.setDataTable(
+let dt_position = setDataTable(
     'table-positions',
     columns,
     dt_route
@@ -57,19 +57,19 @@ function saveItem() {
         success: function(res) {
             disableButton('btn-save', false);
             disableButton('btn-cancel', false);
-            App.setNotif(false, res.message);
+            showNotif(false, res.message);
             closeModal('modalPosition');
             dt_position.ajax.reload();
         },
         error: function(err) {
-            App.setNotif(true, err);
+            showNotif(true, err);
         }
     })
 }
 
 function deleteItem(id, text) {
     let url = base_url + `/positions/${id}`
-    App.deleteMaster(
+    deleteMaster(
         text,
         'Yes! Delete it',
         'Cancel',

@@ -25,7 +25,7 @@ var EcomOrders = function() {
             } );
 
             /* Initialize Bootstrap Datatables Integration */
-            App.datatables();
+            dtIntegration();
 
             /* Initialize Datatables */
             $('#ecom-orders').dataTable({

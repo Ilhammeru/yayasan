@@ -24,7 +24,7 @@ var columns = [{
   orderable: false
 }];
 var dt_route = base_url + '/positions/ajax';
-var dt_position = App.setDataTable('table-positions', columns, dt_route);
+var dt_position = setDataTable('table-positions', columns, dt_route);
 function createPosition(text) {
   openModalWithValue('GET', 'form-position', 'modalPosition', 'modalPositionLabel', text, base_url + '/positions/create');
 }
@@ -47,18 +47,18 @@ function saveItem() {
     success: function success(res) {
       disableButton('btn-save', false);
       disableButton('btn-cancel', false);
-      App.setNotif(false, res.message);
+      showNotif(false, res.message);
       closeModal('modalPosition');
       dt_position.ajax.reload();
     },
     error: function error(err) {
-      App.setNotif(true, err);
+      showNotif(true, err);
     }
   });
 }
 function deleteItem(id, text) {
   var url = base_url + "/positions/".concat(id);
-  App.deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_position);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_position);
 }
 window.createPosition = createPosition;
 window.saveItem = saveItem;

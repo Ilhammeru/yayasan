@@ -70,5 +70,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('dist/js/employee.js') }}"></script> 
+    <script src="{{ mix('dist/js/employee.js') }}"></script> 
 @endpush

@@ -25,7 +25,7 @@ var EcomProducts = function() {
             } );
 
             /* Initialize Bootstrap Datatables Integration */
-            App.datatables();
+            dtIntegration();
 
             /* Initialize Datatables */
             $('#ecom-products').dataTable({

@@ -154,7 +154,7 @@ class IntitutionController extends Controller
             }
             $data->delete();
             $service = new InstitutionService();
-            $service->store($request);
+            $service->store($request, $id);
 
             DB::commit();
             return response()->json(['message' => 'Success create Intitution']);

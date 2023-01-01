@@ -60,9 +60,9 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('dist/js/intitution.js') }}"></script> 
+    <script src="{{ mix('dist/js/intitution.js') }}"></script> 
     <script>
-         App.datatables();
+        dtIntegration();
         /* Initialize Datatables */
         let columns = [
             {data: 'id',
@@ -78,7 +78,7 @@
             {data: 'action', name: 'action', className: 'text-center', orderable: false},
         ];
         let dt_route = "{{ route('intitutions.ajax') }}"
-        let dttable = App.setDataTable(
+        let dttable = setDataTable(
             'example-datatable',
             columns,
             dt_route
@@ -90,7 +90,7 @@
         function deleteItem(id) {
             let url = "{{ route('intitutions.destroy', '_ID_') }}";
             url = url.replace('_ID_', id);
-            App.deleteMaster(
+            deleteMaster(
                 "{{ __('view.delete_text') }}",
                 "{{ __('view.confirm_delete') }}",
                 "{{ __('view.cancel_delete') }}",

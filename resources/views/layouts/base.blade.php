@@ -203,7 +203,7 @@
         <script src="js/helpers/gmaps.min.js"></script> --}}
 
         {{-- custom scripts --}}
-        <script src="{{ asset('dist/js/base.js') }}"></script>
+        <script src="{{ mix('dist/js/base.js') }}"></script>
         <script>
             $.ajaxSetup({
                 headers: {

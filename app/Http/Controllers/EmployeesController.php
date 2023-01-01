@@ -59,10 +59,10 @@ class EmployeesController extends Controller
                 return '<span class="label label-'. $class .'">'. $text .'</span>';
             })
             ->editColumn('position_id', function($d) {
-                return $d->position->name;
+                return $d->position ? $d->position->name : '-';
             })
             ->editColumn('institution_id', function($d) {
-                return $d->institution->name;
+                return $d->institution ? $d->institution->name : '';
             })
             ->addColumn('action', function($d) {
                 return '

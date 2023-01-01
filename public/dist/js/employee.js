@@ -125,7 +125,7 @@ function getCity(e) {
       });
     },
     error: function error(err) {
-      App.setNotif(true, err);
+      showNotif(true, err);
     }
   });
 }
@@ -167,7 +167,7 @@ function getDistrict(e) {
       });
     },
     error: function error(err) {
-      App.setNotif(true, err);
+      showNotif(true, err);
     }
   });
 }

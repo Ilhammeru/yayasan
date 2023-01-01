@@ -52,5 +52,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('dist/js/role.js') }}"></script> 
+    <script src="{{ mix('dist/js/role.js') }}"></script> 
 @endpush

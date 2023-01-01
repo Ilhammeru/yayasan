@@ -10,7 +10,7 @@ function saveItem() {
         let classInput = $(`.class-input-${a}`).val();
         let levelInput = $(`.level-input-${a}`).val();
         if (levelInput != '' && classInput == '') {
-            return App.setNotif(true, 'Class cannot be empty if level of class is declare');
+            return showNotif(true, 'Class cannot be empty if level of class is declare');
         }
     }
 
@@ -23,18 +23,16 @@ function saveItem() {
             $('#btn-cancel').prop('disabled', true);
         },
         success: function(res) {
-            console.log(res);
             $('#btn-save').prop('disabled', false);
             $('#btn-cancel').prop('disabled', false);
             dttable.ajax.reload();
-            App.setNotif(false, res.message);
+            showNotif(false, res.message);
             closeModal('modalIntitution');
         },
         error: function(err) {
-            console.log('err',err);
             $('#btn-save').prop('disabled', false);
             $('#btn-cancel').prop('disabled', false);
-            App.setNotif(true, err);
+            showNotif(true, err);
         }
     })
 }
@@ -73,7 +71,7 @@ function createForm(createText) {
             $('#form-intitution').attr('method', "POST");
         },
         error: function(err) {
-            App.setNotif(true, err);
+            showNotif(true, err);
         }
     })
 }
@@ -151,7 +149,7 @@ function updateForm(id, createText = 'Update institution') {
             $('#form-intitution').attr('method', "PUT");
         },
         error: function(err) {
-            App.setNotif(true, err);
+            showNotif(true, err);
         }
     })
 }

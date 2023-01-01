@@ -3,7 +3,7 @@ var __webpack_exports__ = {};
 /*!******************************!*\
   !*** ./resources/js/role.js ***!
   \******************************/
-App.datatables();
+dtIntegration();
 var columns = [{
   data: 'id',
   render: function render(data, type, row, meta) {
@@ -21,10 +21,10 @@ var columns = [{
   orderable: false
 }];
 var dt_route = base_url + '/roles/ajax';
-var dt_role = App.setDataTable('table-roles', columns, dt_route);
+var dt_role = setDataTable('table-roles', columns, dt_route);
 function deleteItem(id, text) {
   var url = base_url + "/roles/".concat(id);
-  App.deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_role);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_role);
 }
 function createRole(text) {
   $.ajax({
@@ -39,7 +39,7 @@ function createRole(text) {
       $('#modalRole').modal('show');
     },
     error: function error(err) {
-      App.setNotif(true, err.responseJSON);
+      showNotif(true, err.responseJSON);
     }
   });
 }
@@ -53,7 +53,7 @@ function updateForm(id, text) {
       buildModalBody(text, url, res.view, 'PUT');
     },
     error: function error(err) {
-      App.setNotif(true, err.responseJSON);
+      showNotif(true, err.responseJSON);
     }
   });
 }
@@ -80,14 +80,14 @@ function saveItem() {
     success: function success(res) {
       disableButton('btn-save', false);
       disableButton('btn-cancel', false);
-      App.setNotif(false, res.message);
+      showNotif(false, res.message);
       dt_role.ajax.reload();
       closeModal('modalRole');
     },
     error: function error(err) {
       disableButton('btn-save', false);
       disableButton('btn-cancel', false);
-      App.setNotif(true, err.responseJSON);
+      showNotif(true, err.responseJSON);
     }
   });
 }

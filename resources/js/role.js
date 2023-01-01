@@ -1,4 +1,4 @@
-App.datatables();
+dtIntegration();
 
 let columns = [
     {data: 'id',
@@ -12,7 +12,7 @@ let columns = [
     {data: 'action', name: 'action', className: 'text-center', orderable: false},
 ];
 let dt_route = base_url + '/roles/ajax'
-let dt_role = App.setDataTable(
+let dt_role = setDataTable(
     'table-roles',
     columns,
     dt_route
@@ -20,7 +20,7 @@ let dt_role = App.setDataTable(
 
 function deleteItem(id, text) {
     let url = base_url + `/roles/${id}`
-    App.deleteMaster(
+    deleteMaster(
         text,
         'Yes! Delete it',
         'Cancel',
@@ -44,7 +44,7 @@ function createRole(text) {
             $('#modalRole').modal('show');
         },
         error: function(err) {
-            App.setNotif(true, err.responseJSON);
+            showNotif(true, err.responseJSON);
         }
     })
 }
@@ -61,7 +61,7 @@ function updateForm(id, text) {
             buildModalBody(text, url, res.view, 'PUT');
         },
         error: function(err) {
-            App.setNotif(true, err.responseJSON);
+            showNotif(true, err.responseJSON);
         }
     })
 }
@@ -91,14 +91,14 @@ function saveItem() {
         success: function(res) {
             disableButton('btn-save', false);
             disableButton('btn-cancel', false);
-            App.setNotif(false, res.message);
+            showNotif(false, res.message);
             dt_role.ajax.reload();
             closeModal('modalRole');
         },
         error: function(err) {
             disableButton('btn-save', false);
             disableButton('btn-cancel', false);
-            App.setNotif(true, err.responseJSON);
+            showNotif(true, err.responseJSON);
         }
     })
 }
