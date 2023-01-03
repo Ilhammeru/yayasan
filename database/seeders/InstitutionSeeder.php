@@ -8,6 +8,7 @@ use App\Models\Intitution;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class InstitutionSeeder extends Seeder
 {
@@ -18,9 +19,11 @@ class InstitutionSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         Intitution::truncate();
         InstitutionClass::truncate();
         InstitutionClassLevel::truncate();
+        Schema::enableForeignKeyConstraints();
 
         Intitution::insert([
             [
