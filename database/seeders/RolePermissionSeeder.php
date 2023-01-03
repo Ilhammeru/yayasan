@@ -18,11 +18,23 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
-        $kp = Role::create(['name' => 'kepala sekolah']);
-        $wkp = Role::create(['name' => 'wakil kepala']);
-        $tu = Role::create(['name' => 'tu']);
-        $wk = Role::create(['name' => 'wali kelas']);
-        $g = Role::create(['name' => 'guru']);
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $alls = [
+            'kepala sekolah',
+            'wakil kepala',
+            'tu',
+            'wali kelas',
+            'guru'
+        ];
+        foreach($alls as $key => $all) {
+            $j = Role::create(['name' => $all]);
+        }
+        $kp = Role::findByName('kepala sekolah');
+        // $wkp = Role::create(['name' => 'wakil kepala']);
+        // $tu = Role::create(['name' => 'tu']);
+        // $wk = Role::create(['name' => 'wali kelas']);
+        // $g = Role::create(['name' => 'guru']);
 
         $kp_user = User::insert([
             'username' => 'kepalasekolah',
