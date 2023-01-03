@@ -10,7 +10,7 @@
 
         .user-internal .header-image img {
             width: 150px;
-            height: auto;
+            height: 150px;
             border-radius: 50%;
         }
         .user-internal .header-text .name {
