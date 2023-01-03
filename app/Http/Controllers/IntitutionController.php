@@ -21,6 +21,7 @@ class IntitutionController extends Controller
     public function __construct()
     {
         $this->vp = 'master.intitutions';
+        $this->middleware(['permission:master institution']);
     }
 
     /**

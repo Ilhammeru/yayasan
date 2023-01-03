@@ -27,7 +27,8 @@ Table internal_user {
     district_id int
     city_id int
     province_id int
-    class_level_id int [ref: > class_level.id]
+    instutition_class_id int [ref: > instutition_class.id]
+    instutition_class_level_id int [ref: > instutition_class_level.id]
     status boolean [not null, default: 'true']
     created_at timestamp
     updated_at timestamp
@@ -88,6 +89,13 @@ Table users {
     username varchar(100)
     password text
     role int
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table expense_categories {
+    id int [pk, increment]
+    name varchar [not null]
     created_at timestamp
     updated_at timestamp
 }

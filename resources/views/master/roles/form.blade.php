@@ -15,7 +15,7 @@
             @foreach ($p as $key => $item)
             <div class="col-md-3 col-sm-12">
                 <label class="checkbox-inline" for="permission_{{ $key }}_{{ $k }}">
-                    <input type="checkbox" id="permission_{{ $key }}_{{ $k }}" name="permissions[]" value="option1"> {{ ucfirst($item->name) }}
+                    <input type="checkbox" id="permission_{{ $key }}_{{ $k }}" value="{{ $item->id }}" name="permissions[]" {{ $item['active'] ? 'checked' : '' }}> {{ ucfirst($item->name) }}
                 </label>
             </div>
             @endforeach

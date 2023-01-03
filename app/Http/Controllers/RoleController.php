@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\PermissionService;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -14,6 +15,7 @@ class RoleController extends Controller
     public function __construct()
     {
         $this->vp = 'master.roles';
+        $this->middleware(['permission:master role']);
     }
 
     /**
@@ -82,8 +84,17 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'permissions' => 'required'
+        ]);
         $name = strtolower($request->name);
-        Role::create(['name' => $name]);
+        $role = Role::create(['name' => $name]);
+        $p = $request->permissions;
+        for ($a = 0; $a < count($p); $a++) {
+            $permission = Permission::findById($p[$a]);
+            $role->givePermissionTo($permission);
+        }
         return response()->json(['message' => 'Success create role']);
     }
 
@@ -107,7 +118,9 @@ class RoleController extends Controller
     public function edit($id)
     {
         $data = Role::findById($id);
-        $view = view($this->vp . '.form', compact('data'))->render();
+        $s = new PermissionService();
+        $permissions = $s->get_permission_group($data);
+        $view = view($this->vp . '.form', compact('data', 'permissions'))->render();
         return response()->json(['message' => 'Success', 'view' => $view]);
     }
 
@@ -120,7 +133,28 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'permissions' => 'required'
+        ]);
+        $data = Role::findById($id);
+        $current_permissions = $data->permissions;
+        $permissions = $request->permissions;
+
+        // remove permission if needed
+        if (count($current_permissions) > 0) {
+            foreach ($current_permissions as $cp) {
+                $data->revokePermissionTo($cp);
+            }
+        }
+        
+        // assign permission
+        for ($a = 0; $a < count($permissions); $a++) {
+            $permit = Permission::findById($permissions[$a]);
+            $data->givePermissionTo($permit);
+        }
+
+        return response()->json(['message' => 'Success update role']);
     }
 
     /**

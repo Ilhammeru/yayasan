@@ -20,6 +20,7 @@ class EmployeesController extends Controller
     public function __construct()
     {
         $this->vp = 'master.employees';
+        $this->middleware(['permission:master employee']);
     }
 
     /**
@@ -47,7 +48,7 @@ class EmployeesController extends Controller
         $data = Employees::all();
         return DataTables::of($data)
             ->editColumn('name', function($d) {
-                return '<a href="">'. ucfirst($d->name) .'</a>';
+                return '<a href="'. route('employees.show', $d->id) .'">'. ucfirst($d->name) .'</a>';
             })
             ->editColumn('status', function($d) {
                 $class = 'warning';
@@ -192,7 +193,7 @@ class EmployeesController extends Controller
             $institutions = Intitution::active()->get();
             $positions = Position::all();
             $provinces = \Indonesia::allProvinces();
-            $view = view($this->vp . '.form', compact('institutions', 'positions', 'provinces', 'institutions', 'employees'))->render();
+            $view = view($this->vp . '.show', compact('institutions', 'positions', 'provinces', 'institutions', 'employees'))->render();
             return response()->json([
                 'message' => 'Success',
                 'view' => $view,

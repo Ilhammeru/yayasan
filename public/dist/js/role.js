@@ -1,1 +1,100 @@
-(()=>{dtIntegration();var e=base_url+"/roles/ajax",o=setDataTable("table-roles",[{data:"id",render:function(e,o,t,a){return a.row+a.settings._iDisplayStart+1},width:"5%",className:"text-center"},{data:"name",name:"name"},{data:"action",name:"action",className:"text-center",orderable:!1}],e);function t(e,o,t,a){$("#modalRoleLabel").text(e),$("#form-role").attr("action",o),$("#form-role").attr("method",a),$("#modalRole .modal-body").html(t),$("#modalRole").modal("show")}window.deleteItem=function(e,t){var a=base_url+"/roles/".concat(e);deleteMaster(t,"Yes! Delete it","Cancel",a,o)},window.createRole=function(e){$.ajax({type:"GET",url:base_url+"/roles/create",beforeSend:function(){},success:function(o){$("#modalRoleLabel").text(e),$("#form-role").attr("action",base_url+"/roles"),$("#form-role").attr("method","POST"),$("#modalRole .modal-body").html(o.view),$("#modalRole").modal("show")},error:function(e){showNotif(!0,e.responseJSON)}})},window.updateForm=function(e,o){var a=base_url+"/roles/".concat(e);$.ajax({type:"GET",url:base_url+"/roles/".concat(e,"/edit"),beforeSend:function(){},success:function(e){t(o,a,e.view,"PUT")},error:function(e){showNotif(!0,e.responseJSON)}})},window.saveItem=function(){var e=$("#form-role"),t=e.attr("method"),a=e.attr("action"),n=e.serialize();$.ajax({type:t,url:a,data:n,beforeSend:function(){disableButton("btn-save"),disableButton("btn-cancel")},success:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!1,e.message),o.ajax.reload(),closeModal("modalRole")},error:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!0,e.responseJSON)}})},window.buildModalBody=t})();
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!******************************!*\
+  !*** ./resources/js/role.js ***!
+  \******************************/
+dtIntegration();
+var columns = [{
+  data: 'id',
+  render: function render(data, type, row, meta) {
+    return meta.row + meta.settings._iDisplayStart + 1;
+  },
+  width: '5%',
+  className: 'text-center'
+}, {
+  data: 'name',
+  name: 'name'
+}, {
+  data: 'action',
+  name: 'action',
+  className: 'text-center',
+  orderable: false
+}];
+var dt_route = base_url + '/roles/ajax';
+var dt_role = setDataTable('table-roles', columns, dt_route);
+function deleteItem(id, text) {
+  var url = base_url + "/roles/".concat(id);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_role);
+}
+function createRole(text) {
+  $.ajax({
+    type: 'GET',
+    url: base_url + '/roles/create',
+    beforeSend: function beforeSend() {},
+    success: function success(res) {
+      $('#modalRoleLabel').text(text);
+      $('#form-role').attr('action', base_url + '/roles');
+      $('#form-role').attr('method', 'POST');
+      $('#modalRole .modal-body').html(res.view);
+      $('#modalRole').modal('show');
+    },
+    error: function error(err) {
+      showNotif(true, err.responseJSON);
+    }
+  });
+}
+function updateForm(id, text) {
+  var url = base_url + "/roles/".concat(id);
+  $.ajax({
+    type: 'GET',
+    url: base_url + "/roles/".concat(id, "/edit"),
+    beforeSend: function beforeSend() {},
+    success: function success(res) {
+      buildModalBody(text, url, res.view, 'PUT');
+    },
+    error: function error(err) {
+      showNotif(true, err.responseJSON);
+    }
+  });
+}
+function buildModalBody(text, url, view, method) {
+  $('#modalRoleLabel').text(text);
+  $('#form-role').attr('action', url);
+  $('#form-role').attr('method', method);
+  $('#modalRole .modal-body').html(view);
+  $('#modalRole').modal('show');
+}
+function saveItem() {
+  var form = $('#form-role');
+  var method = form.attr('method');
+  var url = form.attr('action');
+  var data = form.serialize();
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    beforeSend: function beforeSend() {
+      disableButton('btn-save');
+      disableButton('btn-cancel');
+    },
+    success: function success(res) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(false, res.message);
+      dt_role.ajax.reload();
+      closeModal('modalRole');
+    },
+    error: function error(err) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(true, err.responseJSON);
+    }
+  });
+}
+window.deleteItem = deleteItem;
+window.createRole = createRole;
+window.updateForm = updateForm;
+window.saveItem = saveItem;
+window.buildModalBody = buildModalBody;
+/******/ })()
+;

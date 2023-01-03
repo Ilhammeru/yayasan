@@ -1,1 +1,68 @@
-(()=>{dtIntegration();var e=base_url+"/permissions/ajax",a=setDataTable("table-permissions",[{data:"id",render:function(e,a,t,n){return n.row+n.settings._iDisplayStart+1},width:"5%",className:"text-center"},{data:"name",name:"name"},{data:"action",name:"action",className:"text-center",orderable:!1}],e);window.createPermission=function(e){openModalWithValue("GET","form-permission","modalPermission","modalPermissionLabel",e,base_url+"/permissions/create")},window.saveItem=function(){var e=$("#form-permission"),t=e.serialize(),n=e.attr("method"),s=e.attr("action");$.ajax({type:n,url:s,data:t,beforeSend:function(){disableButton("btn-save"),disableButton("btn-cancel")},success:function(e){console.log("res",e),disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!1,e.message),closeModal("modalPermission"),a.ajax.reload()},error:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!0,e)}})},window.updateForm=function(e,a){openModalWithValue("GET","form-permission","modalPermission","modalPermissionLabel",a,base_url+"/permissions/"+e+"/edit")},window.deleteItem=function(e,t){var n=base_url+"/permissions/".concat(e);deleteMaster(t,"Yes! Delete it","Cancel",n,a)}})();
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!************************************!*\
+  !*** ./resources/js/permission.js ***!
+  \************************************/
+dtIntegration();
+var columns = [{
+  data: 'id',
+  render: function render(data, type, row, meta) {
+    return meta.row + meta.settings._iDisplayStart + 1;
+  },
+  width: '5%',
+  className: 'text-center'
+}, {
+  data: 'name',
+  name: 'name'
+}, {
+  data: 'action',
+  name: 'action',
+  className: 'text-center',
+  orderable: false
+}];
+var dt_route = base_url + '/permissions/ajax';
+var dt_permission = setDataTable('table-permissions', columns, dt_route);
+function createPermission(text) {
+  openModalWithValue('GET', 'form-permission', 'modalPermission', 'modalPermissionLabel', text, base_url + '/permissions/create');
+}
+function updateForm(id, text) {
+  openModalWithValue('GET', 'form-permission', 'modalPermission', 'modalPermissionLabel', text, base_url + '/permissions/' + id + '/edit');
+}
+function saveItem() {
+  var form = $('#form-permission');
+  var data = form.serialize();
+  var method = form.attr('method');
+  var url = form.attr('action');
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    beforeSend: function beforeSend() {
+      disableButton('btn-save');
+      disableButton('btn-cancel');
+    },
+    success: function success(res) {
+        ;
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(false, res.message);
+      closeModal('modalPermission');
+      dt_permission.ajax.reload();
+    },
+    error: function error(err) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(true, err);
+    }
+  });
+}
+function deleteItem(id, text) {
+  var url = base_url + "/permissions/".concat(id);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_permission);
+}
+window.createPermission = createPermission;
+window.saveItem = saveItem;
+window.updateForm = updateForm;
+window.deleteItem = deleteItem;
+/******/ })()
+;

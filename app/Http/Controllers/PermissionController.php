@@ -16,6 +16,7 @@ class PermissionController extends Controller
     public function __construct()
     {
         $this->vp = 'master.permissions';
+        $this->middleware(['permission:master permission']);
     }
 
     /**

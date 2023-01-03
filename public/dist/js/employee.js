@@ -1,1 +1,92 @@
-(()=>{dtIntegration();var e=base_url+"/employees/ajax",t=setDataTable("table-employee",[{data:"id",render:function(e,t,a,i){return i.row+i.settings._iDisplayStart+1},width:"5%",className:"text-center"},{data:"name",name:"name"},{data:"position_id",name:"position_id"},{data:"institution_id",name:"institution_id"},{data:"nip",name:"nip"},{data:"phone",name:"phone"},{data:"email",name:"email"},{data:"status",name:"status",orderable:!1},{data:"action",name:"action",className:"text-center",orderable:!1}],e);window.createEmployee=function(e){openModalWithValue("GET","form-employee","modalEmployee","modalEmployeeLabel",e,base_url+"/employees/create")},window.saveItem=function(){var e=$("#form-employee"),a=e.serialize(),i=e.attr("method"),o=e.attr("action"),n=0;$("#status").prop("checked")&&(n=1),a=a+"&status="+n,$.ajax({type:i,url:o,data:a,beforeSend:function(){disableButton("btn-save"),disableButton("btn-cancel")},success:function(e){console.log("res",e),disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!1,e.message),closeModal("modalEmployee"),t.ajax.reload()},error:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!0,e)}})},window.deleteItem=function(e,a){var i=base_url+"/employees/".concat(e);deleteMaster(a,"Yes! Delete it","Cancel",i,t)},window.updateForm=function(e,t){openModalWithValue("GET","form-employee","modalEmployee","modalEmployeeLabel",t,base_url+"/employees/"+e+"/edit")},window.getCity=function(e){var t,a=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null;t=a?e:e.value,$.ajax({type:"POST",url:base_url+"/get-city",data:{province_id:t},beforeSend:function(){$("#city_id").chosen("destroy"),$("#city_id").html(""),$("#city_id").prop("disabled",!0),$("#district_id").chosen("destroy"),$("#district_id").prop("disabled",!0),$("#district_id").html("")},success:function(e){for(var t=e.data,i="<option></option>",o=0;o<t.length;o++){var n="";a&&a==t[o].id&&(n="selected"),i+='<option value="'.concat(t[o].id,'" ').concat(n,">").concat(t[o].name,"</option>")}$("#city_id").html(i),$("#city_id").prop("disabled",!1),$("#city_id").chosen({width:"100%"})},error:function(e){showNotif(!0,e)}})},window.getDistrict=function(e){var t,a=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null;t=a?e:e.value,$.ajax({type:"POST",url:base_url+"/get-district",data:{city_id:t},beforeSend:function(){$("#district_id").chosen("destroy"),$("#district_id").html(""),$("#district_id").prop("disabled",!0)},success:function(e){for(var t=e.data,i="<option></option>",o=0;o<t.length;o++){var n="";a&&a==t[o].id&&(n="selected"),i+='<option value="'.concat(t[o].id,'" ').concat(n,">").concat(t[o].name,"</option>")}$("#district_id").html(i),$("#district_id").prop("disabled",!1),$("#district_id").chosen({width:"100%"})},error:function(e){showNotif(!0,e)}})}})();
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!**********************************!*\
+  !*** ./resources/js/employee.js ***!
+  \**********************************/
+dtIntegration();
+var columns = [{
+  data: 'id',
+  render: function render(data, type, row, meta) {
+    return meta.row + meta.settings._iDisplayStart + 1;
+  },
+  width: '5%',
+  className: 'text-center'
+}, {
+  data: 'name',
+  name: 'name'
+}, {
+  data: 'position_id',
+  name: 'position_id'
+}, {
+  data: 'institution_id',
+  name: 'institution_id'
+}, {
+  data: 'nip',
+  name: 'nip'
+}, {
+  data: 'phone',
+  name: 'phone'
+}, {
+  data: 'email',
+  name: 'email'
+}, {
+  data: 'status',
+  name: 'status',
+  orderable: false
+}, {
+  data: 'action',
+  name: 'action',
+  className: 'text-center',
+  orderable: false
+}];
+var dt_route = base_url + '/employees/ajax';
+var dt_employee = setDataTable('table-employee', columns, dt_route);
+function createEmployee(text) {
+  openModalWithValue('GET', 'form-employee', 'modalEmployee', 'modalEmployeeLabel', text, base_url + '/employees/create');
+}
+function updateForm(id, text) {
+  openModalWithValue('GET', 'form-employee', 'modalEmployee', 'modalEmployeeLabel', text, base_url + '/employees/' + id + '/edit');
+}
+function saveItem() {
+  var form = $('#form-employee');
+  var data = form.serialize();
+  var method = form.attr('method');
+  var url = form.attr('action');
+  var status = 0;
+  if ($('#status').prop('checked')) {
+    status = 1;
+  }
+  data = data + '&status=' + status;
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    beforeSend: function beforeSend() {
+      disableButton('btn-save');
+      disableButton('btn-cancel');
+    },
+    success: function success(res) {
+        ;
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(false, res.message);
+      closeModal('modalEmployee');
+      dt_employee.ajax.reload();
+    },
+    error: function error(err) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(true, err);
+    }
+  });
+}
+function deleteItem(id, text) {
+  var url = base_url + "/employees/".concat(id);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_employee);
+}
+window.createEmployee = createEmployee;
+window.saveItem = saveItem;
+window.deleteItem = deleteItem;
+window.updateForm = updateForm;
+/******/ })()
+;

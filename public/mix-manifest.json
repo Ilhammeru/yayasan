@@ -5,5 +5,6 @@
     "/dist/js/employee.js": "/dist/js/employee.js",
     "/dist/js/base.js": "/dist/js/base.js",
     "/dist/js/permission.js": "/dist/js/permission.js",
+    "/dist/js/user.js": "/dist/js/user.js",
     "/assets/js/app.js": "/assets/js/app.js"
 }

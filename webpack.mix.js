@@ -7,5 +7,5 @@ mix.setPublicPath('public')
     .js('resources/js/employee.js', 'dist/js')
     .js('resources/js/base.js', 'dist/js')
     .js('resources/js/permission.js', 'dist/js')
-    .js('resources/views/layouts/js/app.js', 'assets/js')
-    .browserSync('http://yayasan.test');
+    .js('resources/js/user.js', 'dist/js')
+    .js('resources/views/layouts/js/app.js', 'assets/js');

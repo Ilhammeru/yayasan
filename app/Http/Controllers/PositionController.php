@@ -15,6 +15,7 @@ class PositionController extends Controller
     public function __construct()
     {
         $this->vp = 'master.positions';
+        $this->middleware(['permission:master position']);
     }
 
     /**

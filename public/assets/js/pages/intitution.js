@@ -25,7 +25,7 @@ var Intitution = function() {
                 closeModal('modalIntitution');
             },
             error: function(err) {
-                console.log('err',err);
+                 ;
                 $('#btn-save').prop('disabled', false);
                 $('#btn-cancel').prop('disabled', false);
                 showNotif(true, err);

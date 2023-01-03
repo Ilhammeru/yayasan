@@ -20,6 +20,22 @@ if (!function_exists('active_sidebar_parent')) {
 }
 
 /**
+ * Function to set sidebar child active based on given url
+ */
+if (!function_exists('active_sidebar_child')) {
+    function active_sidebar_child($url) {
+        $name = Route::currentRouteName();
+        for ($a = 0; $a < count($url); $a++) {
+            if ($name == $url[$a]) {
+                return 'active';
+            }
+        }
+
+        return '';
+    }
+}
+
+/**
  * Function to set breadcrumb
  */
 if (!function_exists('breadcrumb')) {

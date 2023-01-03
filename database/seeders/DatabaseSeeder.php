@@ -22,7 +22,12 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             RolePermissionSeeder::class,
-            PermissionGroupSeeder::class
+            PermissionGroupSeeder::class,
+            InternalUserSeeder::class,
+            ExpenseCategorySeeder::class,
+            ExpenseMethodSeeder::class,
+            ExpenseTypeSeeder::class,
+            ExpenseMainSeeder::class,
         ]);
     }
 }

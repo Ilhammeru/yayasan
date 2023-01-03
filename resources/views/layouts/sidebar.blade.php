@@ -188,7 +188,7 @@
             <!-- Sidebar Navigation -->
             <ul class="sidebar-nav">
                 <li>
-                    <a href="index.html"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
+                    <a href="{{ route('dashboard') }}"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
                 </li>
 
                 <!-- begin::master-data -->
@@ -196,33 +196,68 @@
                     <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="gi gi-settings"></i></a><a href="javascript:void(0)" data-toggle="tooltip" title="Create the most amazing pages with the widget kit!"><i class="gi gi-lightbulb"></i></a></span>
                     <span class="sidebar-header-title">Settings</span>
                 </li>
-                <li class="{{ active_sidebar_parent(['intitutions.index', 'roles.index', 'positions.index', 'employees.index', 'permissions.index']) }}">
+                <li class="{{ active_sidebar_parent(['intitutions.index', 'roles.index', 'positions.index', 'employees.index', 'permissions.index', 'users.index', 'expenses.category.index', 'expenses.method.index', 'expenses.type.index', 'expenses.main.index']) }}">
                     <a href="#" class="sidebar-nav-menu">
                         <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
                         <i class="gi gi-database_lock sidebar-nav-icon"></i>
                         <span class="sidebar-nav-mini-hide">{{ __('view.master_data') }}</span>
                     </a>
                     <ul>
+                        @if (auth()->user()->can('master institution'))
+                            <li>
+                                <a class="{{ active_sidebar_child(['intitutions.index']) }}" href="{{ route('intitutions.index') }}">{{ __('view.intitutions') }}</a>
+                            </li>
+                        @endif
+                        @if (auth()->user()->can('master role'))
+                            <li>
+                                <a class="{{ active_sidebar_child(['roles.index']) }}" href="{{ route('roles.index') }}">{{ __('view.role') }}</a>
+                            </li>
+                        @endif
+                        @if (auth()->user()->can('master permission'))
+                            <li>
+                                <a class="{{ active_sidebar_child(['permissions.index']) }}" href="{{ route('permissions.index') }}">{{ __('view.permissions') }}</a>
+                            </li>
+                        @endif
+                        @if (auth()->user()->can('master position'))
+                            <li>
+                                <a class="{{ active_sidebar_child(['positions.index']) }}" href="{{ route('positions.index') }}">{{ __('view.position') }}</a>
+                            </li>
+                        @endif
+                        @if (auth()->user()->can('master employee'))
+                            <li>
+                                <a class="{{ active_sidebar_child(['employees.index']) }}" href="{{ route('employees.index') }}">Staff</a>
+                            </li>
+                        @endif
                         <li>
-                            <a class="{{ active_sidebar_parent(['intitutions.index']) }}" href="{{ route('intitutions.index') }}">{{ __('view.intitutions') }}</a>
+                            <a href="#" class="sidebar-nav-submenu {{ active_sidebar_parent(['users.index']) }}"><i class="fa fa-angle-left sidebar-nav-indicator"></i>{{ __('view.users') }}</a>
+                            <ul @if(active_sidebar_parent(['users.index']) == 'active') style="display: block;" @endif>
+                                <li>
+                                    <a href="{{ route('users.index', 'internal') }}" class="{{ active_sidebar_child(['users.index']) }}">Internal</a>
+                                </li>
+                                <li>
+                                    <a href="#">External</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
-                            <a class="{{ active_sidebar_parent(['roles.index']) }}" href="{{ route('roles.index') }}">{{ __('view.role') }}</a>
+                            <a href="#" class="sidebar-nav-submenu {{ active_sidebar_parent(['expenses.category.index', 'expenses.method.index', 'expenses.type.index', 'expenses.main.index']) }}"><i class="fa fa-angle-left sidebar-nav-indicator"></i>{{ __('view.expenses') }}</a>
+                            <ul @if(active_sidebar_parent(['expenses.category.index', 'expenses.method.index', 'expenses.type.index', 'expenses.main.index']) == 'active') style="display: block;" @endif>
+                                <li>
+                                    <a href="{{ route('expenses.main.index') }}" class="{{ active_sidebar_child(['expenses.main.index']) }}">@lang('view.main')</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('expenses.category.index') }}" class="{{ active_sidebar_child(['expenses.category.index']) }}">@lang('view.category')</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('expenses.method.index') }}" class="{{ active_sidebar_child(['expenses.method.index']) }}">@lang('view.method')</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('expenses.type.index') }}" class="{{ active_sidebar_child(['expenses.type.index']) }}">@lang('view.type')</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
-                            <a class="{{ active_sidebar_parent(['permissions.index']) }}" href="{{ route('permissions.index') }}">{{ __('view.permissions') }}</a>
-                        </li>
-                        <li>
-                            <a class="{{ active_sidebar_parent(['positions.index']) }}" href="{{ route('positions.index') }}">{{ __('view.position') }}</a>
-                        </li>
-                        <li>
-                            <a class="{{ active_sidebar_parent(['employees.index']) }}" href="{{ route('employees.index') }}">Staff</a>
-                        </li>
-                        <li>
-                            <a class="{{ active_sidebar_parent([]) }}" href="#">User</a>
-                        </li>
-                        <li>
-                            <a class="{{ active_sidebar_parent([]) }}" href="#">Account</a>
+                            <a class="{{ active_sidebar_child([]) }}" href="#">Account</a>
                         </li>
                     </ul>
                 </li>

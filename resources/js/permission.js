@@ -55,7 +55,7 @@ function saveItem() {
             disableButton('btn-cancel');
         },
         success: function(res) {
-            console.log('res',res);
+             ;
             disableButton('btn-save', false);
             disableButton('btn-cancel', false);
             showNotif(false, res.message);
