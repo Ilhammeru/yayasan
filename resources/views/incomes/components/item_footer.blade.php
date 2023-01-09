@@ -14,7 +14,7 @@
 		  	<div class="message-body">
 			   	<textarea id="ckeditor_message" name="message"></textarea>
 		  	</div>
-		  	<h3>{{ __('view.attachment') }}</h3>
+		  	{{-- <h3>{{ __('view.attachment') }}</h3>
 		  	<div>
 			    <input type="file"
                     class="filepond"
@@ -24,7 +24,7 @@
                     data-allow-reorder="true"
                     data-max-file-size="3MB"
                     data-max-files="5">
-		  	</div>
+		  	</div> --}}
 		</div>
 	</div>
 	<div class="col-md-6">
