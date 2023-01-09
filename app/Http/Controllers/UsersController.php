@@ -11,6 +11,7 @@ use App\Models\Intitution;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -31,8 +32,9 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($type)
+    public function index(Request $request)
     {
+        $type = $request->t;
         breadcrumb([
             [
                 'name' => __('view.users'),
@@ -48,9 +50,74 @@ class UsersController extends Controller
 
     public function ajax($type)
     {
-        $data = $type == 'eksternal' ? ExternalUser::all() : $this->tableInternal();
+        $data = $type == 'external' ? $this->tableExternal() : $this->tableInternal();
 
         return $data;
+    }
+
+    public function tableExternal()
+    {
+        $q = ExternalUser::query();
+
+        if (request()->name) {
+            $name = request()->name;
+            $q->where('name', 'LIKE', "%$name%");
+        }
+
+        if (request()->user_type) {
+            if (request()->user_type == 'all') {
+                $q->where('user_type', '>', 0);
+            } else {
+                $q->where('user_type', request()->user_type);
+            }
+        }
+
+        if (request()->status) {
+            if (request()->status == 'all') {
+                $q->where('status', '>=', 0);
+            } else {
+                $q->where('status', request()->status);
+            }
+        }
+
+        $data = $q->select('*');
+
+        return DataTables::eloquent($data)
+            ->editColumn('name', function($d) {
+                return '<a href="#" onclick="showProfile(`external`, '. $d->id .', `'. __('view.detail_profile') .'`)">'. ucfirst($d->name) .'</a>';
+            })
+            ->editColumn('status', function($d) {
+                $text = 'inactive';
+                $bg = 'warning';
+                if ($d->status) {
+                    $text = 'active';
+                    $bg = 'success';
+                }
+                return '<span class="label label-'. $bg .'">'. $text .'</span>';
+            })
+            ->editColumn('user_type', function($d) {
+                $text = 'inactive';
+                $bg = 'warning';
+                if ($d->user_type == 1) {
+                    $text = __('view.public');
+                    $bg = 'success';
+                } else {
+                    $text = __('view.goverment');
+                    $bg = 'primary';
+                }
+                return '<span class="label label-'. $bg .'">'. $text .'</span>';
+            })
+            ->addColumn('action', function($d) {
+                // $text =
+                return '
+                <div class="btn-group btn-group-xs">
+                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_user') .'`, `external`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`, `external`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                </div>
+                ';
+            })
+            ->rawColumns(['action', 'institution', 'status', 'name', 'user_type'])
+            ->toJson();
     }
 
     public function tableInternal()
@@ -94,14 +161,16 @@ class UsersController extends Controller
     {
         $data = [];
         $param = [];
+        $provinces = \Indonesia::allProvinces();
         if ($type == 'internal') {
             $classes = InstitutionClass::all();
             $levels = InstitutionClassLevel::all();
 
             $institutions = Intitution::active()->get();
 
-            $provinces = \Indonesia::allProvinces();
             $view = view($this->vp . '.form_internal', compact('institutions', 'classes', 'levels', 'provinces'))->render();
+        } else if ($type == 'external') {
+            $view = view($this->vp . '.form_external', compact('provinces'))->render();
         }
 
         return response()->json([
@@ -134,10 +203,19 @@ class UsersController extends Controller
         if ($type == 'internal') {
             $param = [
                 'id' => $id,
-                'first_record' => true
+                'first_record' => true,
+                'type' => $type
             ];
             $data = $this->uservice->get_data($param);
             $view = view($this->vp . '.profile_internal', compact('data'))->render();
+        } else if ($type == 'external') {
+            $param = [
+                'id' => $id,
+                'first_record' => true,
+                'type' => $type
+            ];
+            $data = $this->uservice->get_data($param);
+            $view = view($this->vp . '.profile_external', compact('data'))->render();
         }
         return response()->json([
             'message' => 'Success',
@@ -154,9 +232,38 @@ class UsersController extends Controller
     public function edit($id, $type)
     {
         $data = [];
-        $param = ['id' => $id, 'first_record' => true];
+        $param = ['id' => $id, 'first_record' => true, 'type' => $type];
+        $data = $this->uservice->get_data($param);
+
+        // get all address component
+        $province = \Indonesia::findProvince($data->province_id, ['cities', 'districts']);
+        $cities = $province->cities;
+        $districts = $province->districts;
+        $provinces = \Indonesia::allProvinces();
+        $provinces = collect($provinces)->map(function($item) use ($province) {
+            $item['selected'] = '';
+            if ($item->id == $province->id) {
+                $item['selected'] = 'selected';
+            }
+
+            return $item;
+        })->all();
+        $cities = collect($cities)->map(function($item) use($data) {
+            $item['selected'] = '';
+            if ($item->id == $data->city_id) {
+                $item['selected'] = 'selected';
+            }
+            return $item;
+        })->all();
+        $districts = collect($districts)->map(function($item) use ($data) {
+            $item['selected'] = '';
+            if ($item->id == $data->district_id) {
+                $item['selected'] = 'selected';
+            }
+            return $item;
+        })->all();
+
         if ($type == 'internal') {
-            $data = $this->uservice->get_data($param);
             $ins_id = $data->institution->id;
 
             $classes = InstitutionClass::where('intitution_id', $ins_id)->get();
@@ -187,33 +294,10 @@ class UsersController extends Controller
                 return $item;
             })->all();
 
-            $province = \Indonesia::findProvince($data->province_id, ['cities', 'districts']);
-            $cities = $province->cities;
-            $districts = $province->districts;
-            $provinces = \Indonesia::allProvinces();
-            $provinces = collect($provinces)->map(function($item) use ($province) {
-                $item['selected'] = '';
-                if ($item->id == $province->id) {
-                    $item['selected'] = 'selected';
-                }
-
-                return $item;
-            })->all();
-            $cities = collect($cities)->map(function($item) use($data) {
-                $item['selected'] = '';
-                if ($item->id == $data->city_id) {
-                    $item['selected'] = 'selected';
-                }
-                return $item;
-            })->all();
-            $districts = collect($districts)->map(function($item) use ($data) {
-                $item['selected'] = '';
-                if ($item->id == $data->district_id) {
-                    $item['selected'] = 'selected';
-                }
-                return $item;
-            })->all();
+            
             $view = view($this->vp . '.form_internal', compact('data', 'institutions', 'classes', 'levels', 'provinces', 'cities', 'districts'))->render();
+        } else if ($type == 'external') {
+            $view = view($this->vp . '.form_external', compact('data', 'provinces', 'cities', 'districts'))->render();
         }
 
         return response()->json([
@@ -237,6 +321,8 @@ class UsersController extends Controller
         try {
             if ($type == 'internal') {
                 $this->uservice->updateInternal($request, $id);
+            } else if ($type == 'external') {
+                $this->uservice->updateExternal($request, $id);
             }
 
             DB::commit();

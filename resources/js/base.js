@@ -1,49 +1,6 @@
-const { default: swal } = require("sweetalert");
-
-function openModalWithValue(
-    method,
-    formId,
-    modalId,
-    modalLabel,
-    textLabel,
-    urlReq,
-    urlRes = null
-) {
-    $.ajax({
-        type: method,
-        url: urlReq,
-        beforeSend: function() {
-            
-        },
-        success: function(res) {
-            buildModalBodyGeneral(
-                textLabel,
-                res.url,
-                res.view,
-                res.method,
-                modalLabel,
-                formId,
-                modalId
-            );
-
-            openTab('general');
-        },
-        error: function(err) {
-            showNotif(true, err);
-        }
-    })
-}
-
-function buildModalBodyGeneral(
-    text, url, view, method,
-    modalLabel, formId, modalId
-) {
-    $(`#${modalLabel}`).text(text);
-    $(`#${formId}`).attr('action', base_url + url);
-    $(`#${formId}`).attr('method', method);
-    $(`#${modalId} .modal-body`).html(view);
-    $(`#${modalId}`).modal('show');
-}
+const {
+    default: swal
+} = require("sweetalert");
 
 function showNotif(isError, msg) {
     if (isError) {
@@ -93,7 +50,9 @@ function setDataTable(tableId, columns, route) {
         scrollX: true,
         ajax: route,
         columns: columns,
-        order: [[0, 'desc']]
+        order: [
+            [0, 'desc']
+        ]
     });
     return dt;
 }

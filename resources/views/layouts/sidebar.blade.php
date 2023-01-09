@@ -134,7 +134,7 @@
 
             <!-- Theme Colors -->
             <!-- Change Color Theme functionality can be found in js/app.js - templateOptions() -->
-            <ul class="sidebar-section sidebar-themes clearfix sidebar-nav-mini-hide">
+            {{-- <ul class="sidebar-section sidebar-themes clearfix sidebar-nav-mini-hide">
                 <!-- You can also add the default color theme
                 <li class="active">
                     <a href="javascript:void(0)" class="themed-background-dark-default themed-border-default" data-theme="default" data-toggle="tooltip" title="Default Blue"></a>
@@ -182,7 +182,7 @@
                 <li>
                     <a href="javascript:void(0)" class="themed-background-dark-blackberry themed-border-blackberry" data-theme="css/themes/blackberry.css" data-toggle="tooltip" title="Blackberry"></a>
                 </li>
-            </ul>
+            </ul> --}}
             <!-- END Theme Colors -->
 
             <!-- Sidebar Navigation -->
@@ -196,7 +196,7 @@
                     <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="gi gi-settings"></i></a><a href="javascript:void(0)" data-toggle="tooltip" title="Create the most amazing pages with the widget kit!"><i class="gi gi-lightbulb"></i></a></span>
                     <span class="sidebar-header-title">Settings</span>
                 </li>
-                <li class="{{ active_sidebar_parent(['intitutions.index', 'roles.index', 'positions.index', 'employees.index', 'permissions.index', 'users.index', 'expenses.category.index', 'expenses.method.index', 'expenses.type.index', 'expenses.main.index']) }}">
+                <li class="{{ active_sidebar_parent(['intitutions.index', 'roles.index', 'positions.index', 'employees.index', 'permissions.index', 'users.index.internal', 'users.index.external', 'expenses.category.index', 'expenses.method.index', 'expenses.type.index', 'expenses.main.index', 'income.category.index', 'income.type.index', 'income.method.index']) }}">
                     <a href="#" class="sidebar-nav-menu">
                         <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
                         <i class="gi gi-database_lock sidebar-nav-icon"></i>
@@ -229,16 +229,32 @@
                             </li>
                         @endif
                         <li>
-                            <a href="#" class="sidebar-nav-submenu {{ active_sidebar_parent(['users.index']) }}"><i class="fa fa-angle-left sidebar-nav-indicator"></i>{{ __('view.users') }}</a>
-                            <ul @if(active_sidebar_parent(['users.index']) == 'active') style="display: block;" @endif>
+                            <a href="#" class="sidebar-nav-submenu {{ active_sidebar_parent(['users.index.internal', 'users.index.external']) }}"><i class="fa fa-angle-left sidebar-nav-indicator"></i>{{ __('view.users') }}</a>
+                            <ul @if(active_sidebar_parent(['users.index.internal']) || active_sidebar_parent(['users.index.external']) == 'active') style="display: block;" @endif>
                                 <li>
-                                    <a href="{{ route('users.index', 'internal') }}" class="{{ active_sidebar_child(['users.index']) }}">Internal</a>
+                                    <a href="{{ route('users.index.internal').'?t=internal' }}" class="{{ active_sidebar_child(['users.index.internal']) }}">Internal</a>
                                 </li>
                                 <li>
-                                    <a href="#">External</a>
+                                    <a href="{{ route('users.index.external').'?t=external' }}" class="{{ active_sidebar_child(['users.index.external']) }}">External</a>
                                 </li>
                             </ul>
                         </li>
+
+                        <li>
+                            <a href="#" class="sidebar-nav-submenu {{ active_sidebar_parent(['income.category.index', 'income.type.index', 'income.method.index']) }}"><i class="fa fa-angle-left sidebar-nav-indicator"></i>{{ __('view.income') }}</a>
+                            <ul @if(active_sidebar_parent(['income.category.index']) == 'active' || active_sidebar_parent(['income.type.index']) == 'active' || active_sidebar_parent(['income.method.index']) == 'active') style="display: block;" @endif>
+                                <li>
+                                    <a href="{{ route('income.category.index') }}" class="{{ active_sidebar_child(['income.category.index']) }}">{{ __('view.category') }}</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('income.type.index') }}" class="{{ active_sidebar_child(['income.type.index']) }}">{{ __('view.type') }}</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('income.method.index') }}" class="{{ active_sidebar_child(['income.method.index']) }}">{{ __('view.method') }}</a>
+                                </li>
+                            </ul>
+                        </li>
+
                         <li>
                             <a href="#" class="sidebar-nav-submenu {{ active_sidebar_parent(['expenses.category.index', 'expenses.method.index', 'expenses.type.index', 'expenses.main.index']) }}"><i class="fa fa-angle-left sidebar-nav-indicator"></i>{{ __('view.expenses') }}</a>
                             <ul @if(active_sidebar_parent(['expenses.category.index', 'expenses.method.index', 'expenses.type.index', 'expenses.main.index']) == 'active') style="display: block;" @endif>
@@ -261,6 +277,16 @@
                         </li>
                     </ul>
                 </li>
+                <!-- end::master-data -->
+
+                <!-- begin::income -->
+                @if (auth()->user()->can('income list') || auth()->user()->can('income create') || auth()->user()->can('income edit'))
+                    <li>
+                        <a href="{{ route('incomes.index') }}" class="{{ active_sidebar_child(['incomes.index', 'incomes.create', 'incomes.show', 'incomes.edit']) }}"><i class="fa fa-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">{{ __('view.income') }}</span></a>
+                    </li>
+                @endif
+                <!-- end:income -->
+
             </ul>
             <!-- END Sidebar Navigation -->
         </div>

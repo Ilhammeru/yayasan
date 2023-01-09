@@ -45,8 +45,8 @@
                         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="btn-save" onclick="closeModal('modalPosition')">Close</button>
-                        <button type="button" class="btn btn-primary" id="btn-cancel" onclick="saveItem()">Save changes</button>
+                        <button type="button" class="btn btn-secondary" id="btn-cancel" onclick="closeModal('modalPosition')">Close</button>
+                        <button type="button" class="btn btn-primary" id="btn-save" onclick="saveItem()">Save changes</button>
                     </div>
                 </form>
             </div>

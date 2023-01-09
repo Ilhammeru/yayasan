@@ -1,8 +1,11 @@
 {
     "private": true,
     "dependencies": {
+        "filepond-plugin-file-validate-type": "^1.2.8",
         "izitoast": "^1.4.0",
-        "sweetalert": "^2.1.2"
+        "laravel-mix-polyfill": "^3.0.1",
+        "sweetalert": "^2.1.2",
+        "tippy.js": "^6.3.7"
     },
     "scripts": {
         "dev": "npm run development",

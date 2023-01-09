@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravolt\Indonesia\Models\City;
 use Laravolt\Indonesia\Models\District;
 use Laravolt\Indonesia\Models\Province;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class InternalUser extends Model
 {
@@ -27,6 +28,13 @@ class InternalUser extends Model
         'institution_class_level_id',
         'status'
     ];
+
+    public function type():Attribute
+    {
+        return Attribute::make(
+            get: fn() => 'internal'
+        );
+    }
 
     public function institution():BelongsTo
     {

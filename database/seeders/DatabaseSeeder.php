@@ -29,6 +29,10 @@ class DatabaseSeeder extends Seeder
             ExpenseMethodSeeder::class,
             ExpenseTypeSeeder::class,
             ExpenseMainSeeder::class,
+            IncomeCategorySeeder::class,
+            IncomeTypeSeeder::class,
+            IncomeMethodSeeder::class,
+            AccountSeeder::class,
         ]);
     }
 }

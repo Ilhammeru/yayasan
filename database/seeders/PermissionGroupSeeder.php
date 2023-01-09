@@ -28,9 +28,15 @@ class PermissionGroupSeeder extends Seeder
                 'master permission',
                 'master position',
                 'master employee',
-                'master expense'
+                'master expense',
             ],
-            'transactions' => [],
+            'transactions' => [
+                'income create',
+                'income edit',
+                'income view',
+                'income delete',
+                'income show',
+            ],
         ];
 
         $role = Role::findByName('kepala sekolah');
@@ -38,6 +44,10 @@ class PermissionGroupSeeder extends Seeder
             $group = PermissionGroup::insertGetId(['name' => $key, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
             if (count($n) > 0) {
                 foreach($n as $p) {
+                    $f = Permission::where('name', $p)->first();
+                    if ($f != null) {
+                        $f->delete();
+                    }
                     $create = Permission::create(['name' => $p, 'permission_group_id' => $group]);
                     if ($role) {
                         $role->givePermissionTo($create);

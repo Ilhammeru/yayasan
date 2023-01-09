@@ -1,10 +1,15 @@
 {
-    "/dist/js/intitution.js": "/dist/js/intitution.js",
-    "/dist/js/role.js": "/dist/js/role.js",
-    "/dist/js/position.js": "/dist/js/position.js",
-    "/dist/js/employee.js": "/dist/js/employee.js",
-    "/dist/js/base.js": "/dist/js/base.js",
-    "/dist/js/permission.js": "/dist/js/permission.js",
-    "/dist/js/user.js": "/dist/js/user.js",
-    "/assets/js/app.js": "/assets/js/app.js"
+    "/dist/js/intitution.js": "/dist/js/intitution.js?id=d41d8cd98f00b204e9800998ecf8427e",
+    "/dist/js/role.js": "/dist/js/role.js?id=d41d8cd98f00b204e9800998ecf8427e",
+    "/dist/js/position.js": "/dist/js/position.js?id=7a0fdc084c71b2492227e8ecea23a580",
+    "/dist/js/employee.js": "/dist/js/employee.js?id=d41d8cd98f00b204e9800998ecf8427e",
+    "/dist/js/base.js": "/dist/js/base.js?id=1a685eddb01127050ad680c0bf1477c6",
+    "/dist/js/permission.js": "/dist/js/permission.js?id=d41d8cd98f00b204e9800998ecf8427e",
+    "/dist/js/user.js": "/dist/js/user.js?id=f91e618810214fb1a7288c9c75e765e8",
+    "/dist/js/income.js": "/dist/js/income.js?id=e950e8465a338f49f9bfc1acc4b82b53",
+    "/dist/js/incomeType.js": "/dist/js/incomeType.js?id=94bf22371481ea7b27a74769194aa822",
+    "/dist/js/incomeMethod.js": "/dist/js/incomeMethod.js?id=22a252587883b7caf75800c21d4d1b7a",
+    "/dist/js/mainIncome.js": "/dist/js/mainIncome.js?id=d4aaa1cefd6486425e459fa37b425354",
+    "/dist/js/master.js": "/dist/js/master.js?id=ea23d4a7a0c005240b41445977b6ac53",
+    "/assets/js/app.js": "/assets/js/app.js?id=199bb6805ec547c8dfc93def3b7b329e"
 }

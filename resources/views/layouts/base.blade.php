@@ -196,6 +196,8 @@
         <script src="{{ asset('assets/js/app.js') }}"></script>
         <script src="{{ asset('assets/plugins/izitoast/dist/js/iziToast.min.js') }}"></script>
         <script src="{{ asset('assets/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
+        <script src="{{ mix('dist/js/master.js') }}"></script>
+        <script src="/js/lang.js"></script>
 
         <!-- Google Maps API Key (you will have to obtain a Google Maps API key to use Google Maps) -->
         <!-- For more info please have a look at https://developers.google.com/maps/documentation/javascript/get-api-key#key -->
@@ -204,6 +206,7 @@
 
         {{-- custom scripts --}}
         <script src="{{ mix('dist/js/base.js') }}"></script>
+        
         <script>
             handleSidebar('init');
             $.ajaxSetup({
@@ -216,16 +219,6 @@
 
             function closeModal(id) {
                 $('#' + id).modal('hide');
-            }
-
-            function disableButton(id, isDisable = true) {
-                $(`#${id}`).prop('disabled', isDisable);
-            }
-
-            function regexNumber(e) {
-                let val = e.value;
-                val = val.replace(/\D+/, '');
-                e.value = val;
             }
 
             function handleSidebar(mode, extra) {
@@ -424,137 +417,6 @@
                         || document.body.clientWidth;
             };
 
-            function getCity(e, fromEdit = null) {
-                let val;
-                if (!fromEdit) {
-                    val = e.value;
-                } else {
-                    val = e;
-                }
-                $.ajax({
-                    type: 'POST',
-                    url: base_url + '/get-city',
-                    data: {
-                        province_id: val
-                    },
-                    beforeSend: function() {
-                        $('#city_id').chosen('destroy');
-                        $('#city_id').html('');
-                        $('#city_id').prop('disabled', true);
-                        $('#district_id').chosen('destroy');
-                        $('#district_id').prop('disabled', true);
-                        $('#district_id').html('');
-                    },
-                    success: function(res) {
-                        let data = res.data;
-                        let opt = '<option></option>';
-                        for (let a = 0; a < data.length; a++) {
-                            let selected = '';
-                            if (fromEdit) {
-                                if (fromEdit == data[a].id) {
-                                    selected = 'selected';
-                                }
-                            }
-                            opt += `<option value="${data[a].id}" ${selected}>${data[a].name}</option>`;
-                        }
-                        $('#city_id').html(opt);
-                        $('#city_id').prop('disabled', false);
-                        $('#city_id').chosen({width: "100%"});
-                    },
-                    error: function(err) {
-                        showNotif(true, err);
-                    }
-                })
-            }
-
-            function getDistrict(e, fromEdit = null) {
-                let val;
-                if (!fromEdit) {
-                    val = e.value;
-                } else {
-                    val = e;
-                }
-                $.ajax({
-                    type: 'POST',
-                    url: base_url + '/get-district',
-                    data: {
-                        city_id: val
-                    },
-                    beforeSend: function() {
-                        $('#district_id').chosen('destroy');
-                        $('#district_id').html('');
-                        $('#district_id').prop('disabled', true);
-                    },
-                    success: function(res) {
-                        let data = res.data;
-                        let opt = '<option></option>';
-                        for (let a = 0; a < data.length; a++) {
-                            let selected = '';
-                            if (fromEdit) {
-                                if (fromEdit == data[a].id) {
-                                    selected = 'selected';
-                                }
-                            }
-                            opt += `<option value="${data[a].id}" ${selected}>${data[a].name}</option>`;
-                        }
-                        $('#district_id').html(opt);
-                        $('#district_id').prop('disabled', false);
-                        $('#district_id').chosen({width: "100%"});
-                    },
-                    error: function(err) {
-                        showNotif(true, err);
-                    }
-                })
-            }
-
-            function openModalWithValue(
-                method,
-                formId,
-                modalId,
-                modalLabel,
-                textLabel,
-                urlReq,
-                urlRes = null,
-                needToOpenTab = false
-            ) {
-                $.ajax({
-                    type: method,
-                    url: urlReq,
-                    beforeSend: function() {
-                        
-                    },
-                    success: function(res) {
-                        buildModalBodyGeneral(
-                            textLabel,
-                            res.url,
-                            res.view,
-                            res.method,
-                            modalLabel,
-                            formId,
-                            modalId
-                        );
-
-                        if (needToOpenTab) {
-                            openTab('general');
-                        }
-                    },
-                    error: function(err) {
-                        showNotif(true, err);
-                    }
-                })
-            }
-
-            function buildModalBodyGeneral(
-                text, url, view, method,
-                modalLabel, formId, modalId
-            ) {
-                $(`#${modalLabel}`).text(text);
-                $(`#${formId}`).attr('action', base_url + url);
-                $(`#${formId}`).attr('method', method);
-                $(`#${modalId} .modal-body`).html(view);
-                $(`#${modalId}`).modal('show');
-            }
-
             function openTab(name) {
                 var i, tabcontent, tablinks;
                 tabcontent = document.getElementsByClassName("tabcontent");
@@ -572,12 +434,23 @@
             function showNotif(isError, msg) {
                 if (isError) {
                     let message = msg.responseJSON ? msg.responseJSON.message : msg;
-                    iziToast.error({
-                        title: 'Error',
-                        message: message,
-                        position: 'topRight',
-                        timeout: 3000
-                    })
+                    if (typeof message == 'object') {
+                        for (let a = 0; a < message.length; a++) {
+                            iziToast.error({
+                                title: 'Error',
+                                message: message[a],
+                                position: 'topRight',
+                                timeout: 3000
+                            })
+                        }
+                    } else {
+                        iziToast.error({
+                            title: 'Error',
+                            message: message,
+                            position: 'topRight',
+                            timeout: 3000
+                        })
+                    }
                 } else {
                     iziToast.success({
                         title: 'Success',
@@ -639,7 +512,7 @@
                                 dt.ajax.reload();
                             },
                             error: function(err) {
-                                showNotif(true, err.responseJSON == undefined ? err.responseText : err.responseJSON);
+                                showNotif(true, err);
                             }
                         })
                     }

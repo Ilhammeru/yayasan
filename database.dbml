@@ -100,16 +100,79 @@ Table expense_categories {
     updated_at timestamp
 }
 
-Table income_type {
+Table income_types {
     id int [pk, increment]
     name varchar(100)
     created_at timestamp
     updated_at timestamp
 }
 
-Table income_category {
+Table income_categories {
     id int [pk, increment]
     name varchar(100) [not null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table income_methods {
+    id int [pk, increment]
+    name varchar(100) [not null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table accounts {
+    id int [pk, increment]
+    code string
+    name string
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table incomes {
+    id int [pk, increment]
+    invoice_number string [not null, unique]
+    user_type int [note: '1 for internal user, 2 for external user']
+    user_id [note: 'based on user type']
+    total_amount float
+    institution_id int [note: 'This column show as recipients']
+    income_type_id int [ref: > income_types.id]
+    income_method_id int [ref: > income_methods.id]
+    transaction_start_date timestamp
+    due_date timestamp
+    created_by int
+    status boolean [note: '0 for hold, 1 for received by treasurer of foundation', default: 0]
+    payment_status tinyint [note: '1 for paid, 2 for partially paid, 3 for unpaid', default: 3]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table income_items {
+    id int [pk, increment]
+    income_id int [ref: > incomes.id]
+    income_category_id int [ref: > income_categories.id]
+    amount float
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table income_payments {
+    id int [pk, increment]
+    income_id int [ref: > incomes.id]
+    amount float
+    account_id int [ref: > accounts.id]
+    proof_payment text
+    payment_time timestamp
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table cash_logs {
+    id int [pk, increment]
+    cash_type_id int
+    debit float
+    credit float
+    transaction_time timestamp
     created_at timestamp
     updated_at timestamp
 }
