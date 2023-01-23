@@ -133,8 +133,10 @@ Route::middleware('auth')->group(function () use ($institutions) {
     Route::post('/incomes/generate-transaction', 'IncomeController@generateTransaction')->name('incomes.generate-transaction');
     Route::post('/incomes/proof-of-payment', 'IncomeController@proofOfPayment')->name('incomes.proof-of-payment');
     Route::post('/incomes/generate-data', 'IncomeController@generateData')->name('incomes.generate-data');
-    foreach ($institutions as $i) {
-        Route::get('/incomes/' . Hashids::encode($i['id']), 'IncomeController@index')->name('incomes.index.' . $i['id']);
+    if (count($institutions) > 0) {
+        foreach ($institutions as $i) {
+            Route::get('/incomes/' . Hashids::encode($i['id']), 'IncomeController@index')->name('incomes.index.' . $i['id']);
+        }
     }
     Route::get('incomes/{id}', 'IncomeController@show')->name('incomes.show');
 
