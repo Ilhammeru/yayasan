@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->tinyInteger('user_type')->comment('1 for public, 2 for goverment');
             $table->string('name', 200);
-            $table->string('phone', 15);
+            $table->string('phone', 25);
             $table->string('address')->nullable();
             $table->integer('district_id');
             $table->integer('city_id');

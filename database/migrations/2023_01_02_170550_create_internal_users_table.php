@@ -21,7 +21,7 @@ return new class extends Migration
                 ->on('intitutions');
             $table->string('nis');
             $table->string('parent_data');
-            $table->string('phone', 15);
+            $table->string('phone', 25);
             $table->string('address');
             $table->integer('district_id');
             $table->integer('city_id');
