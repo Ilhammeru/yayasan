@@ -17,7 +17,7 @@ mix.setPublicPath('public')
     .js('resources/js/master.js', 'dist/js')
     .js('resources/views/layouts/js/app.js', 'assets/js')
     .webpackConfig({
-        mode: 'development',
+        mode: 'production',
         optimization: {
             sideEffects: false
         }
