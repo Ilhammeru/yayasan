@@ -1,1 +1,53 @@
-window.createCategory=function(e){openModalWithValue("GET","form-income-category","modalIncomeCategory","modalIncomeCategoryLabel",e,base_url+"/income/category/create")},window.updateForm=function(e,o){openModalWithValue("GET","form-income-category","modalIncomeCategory","modalIncomeCategoryLabel",o,base_url+"/income/category/"+e+"/edit")},window.saveItem=function(){var e=$("#form-income-category"),o=e.serialize(),t=e.attr("method"),a=e.attr("action");$("#status").prop("checked"),$.ajax({type:t,url:a,data:o,beforeSend:function(){disableButton("btn-save"),disableButton("btn-cancel")},success:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!1,e.message),closeModal("modalIncomeCategory"),dt_income_category.ajax.reload()},error:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!0,e)}})},window.deleteItem=function(e,o){var t=base_url+"/income/category/".concat(e);deleteMaster(o,"Yes! Delete it","Cancel",t,dt_income_category)};
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!********************************!*\
+  !*** ./resources/js/income.js ***!
+  \********************************/
+function createCategory(text) {
+  openModalWithValue('GET', 'form-income-category', 'modalIncomeCategory', 'modalIncomeCategoryLabel', text, base_url + '/income/category/create');
+}
+function updateForm(id, text) {
+  openModalWithValue('GET', 'form-income-category', 'modalIncomeCategory', 'modalIncomeCategoryLabel', text, base_url + '/income/category/' + id + '/edit');
+}
+function saveItem() {
+  var form = $('#form-income-category');
+  var data = form.serialize();
+  var method = form.attr('method');
+  var url = form.attr('action');
+  var status = 0;
+  if ($('#status').prop('checked')) {
+    status = 1;
+  }
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    beforeSend: function beforeSend() {
+      disableButton('btn-save');
+      disableButton('btn-cancel');
+    },
+    success: function success(res) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(false, res.message);
+      closeModal('modalIncomeCategory');
+      dt_income_category.ajax.reload();
+    },
+    error: function error(err) {
+      ;
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(true, err);
+    }
+  });
+}
+function deleteItem(id, text) {
+  var url = base_url + "/income/category/".concat(id);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_income_category);
+}
+window.createCategory = createCategory;
+window.updateForm = updateForm;
+window.saveItem = saveItem;
+window.deleteItem = deleteItem;
+/******/ })()
+;

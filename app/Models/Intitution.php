@@ -9,19 +9,27 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Intitution extends Model
 {
     use HasFactory;
+
     protected $table = 'intitutions';
+
     protected $fillable = [
         'name',
-        'status'
+        'status',
     ];
+
     protected $hidden = [
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function classes(): HasMany
     {
         return $this->hasMany(InstitutionClass::class, 'intitution_id');
+    }
+
+    public function incomeCategories(): HasMany
+    {
+        return $this->hasMany(InstitutionIncomeCategory::class, 'institution_id');
     }
 
     public function scopeActive($query)

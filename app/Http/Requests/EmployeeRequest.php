@@ -40,7 +40,7 @@ class EmployeeRequest extends FormRequest
             'position_id' => 'required',
         ];
         $employee = request()->employee;
-        if (!$employee) {
+        if (! $employee) {
             $rules['name'] = [
                 'required',
                 // Rule::unique('employees')->where(function($query) {
@@ -49,47 +49,49 @@ class EmployeeRequest extends FormRequest
             ];
             $rules['email'] = [
                 'required',
-                Rule::unique('employees')->where(function($query) {
-                    return $query->where('deleted_at', NULL);
-                })
+                Rule::unique('employees')->where(function ($query) {
+                    return $query->where('deleted_at', null);
+                }),
             ];
             $rules['username'] = [
-                Rule::unique('users')->where(function($query) {
-                    return $query->where('deleted_at', NULL);
-                })
+                Rule::unique('users')->where(function ($query) {
+                    return $query->where('deleted_at', null);
+                }),
             ];
         } else {
             $rules['name'] = [
                 'required',
-                Rule::unique('employees')->where(function($query) use($employee) {
-                    return $query->where('deleted_at', NULL)
+                Rule::unique('employees')->where(function ($query) use ($employee) {
+                    return $query->where('deleted_at', null)
                         ->where('id', '!=', $employee->id);
                 }),
             ];
             $rules['email'] = [
                 'required',
-                Rule::unique('employees')->where(function($query) use($employee) {
-                    return $query->where('deleted_at', NULL)
+                Rule::unique('employees')->where(function ($query) use ($employee) {
+                    return $query->where('deleted_at', null)
                         ->where('id', '!=', $employee->id);
-                })
+                }),
             ];
             $rules['username'] = [
-                Rule::unique('users')->where(function($query) use($employee) {
+                Rule::unique('users')->where(function ($query) use ($employee) {
                     $user = $employee->user;
                     if ($user) {
-                        return $query->where('deleted_at', NULL)
+                        return $query->where('deleted_at', null)
                             ->where('id', '!=', $user->id);
                     }
-                })
+                }),
             ];
         }
+
         return $rules;
     }
 
     /**
-    * Get the error messages for the defined validation rules.*
-    * @return array
-    */
+     * Get the error messages for the defined validation rules.*
+     *
+     * @return array
+     */
     protected function failedValidation(Validator $validator)
     {
         $errs = $validator->errors()->all();
@@ -98,7 +100,7 @@ class EmployeeRequest extends FormRequest
         }
         throw new HttpResponseException(response()->json([
             'message' => $errs,
-            'status' => true
+            'status' => true,
         ], 422));
     }
 
@@ -125,6 +127,7 @@ class EmployeeRequest extends FormRequest
             'email.unique' => __('view.email_unique'),
             'name.unique' => __('view.name_unique'),
         ];
+
         return $rules;
     }
 }

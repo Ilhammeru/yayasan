@@ -15,6 +15,7 @@ class ExpenseTypeController extends Controller
     {
         $this->vp = 'master.expenses.types';
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,30 +26,32 @@ class ExpenseTypeController extends Controller
         breadcrumb([
             [
                 'name' => __('view.type'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.index');
+
+        return view($this->vp.'.index');
     }
 
     /**
      * Function to generate data for DataTable
-     * 
+     *
      * @return DataTables
      */
     public function ajax()
     {
         $data = ExpenseType::all();
+
         return DataTables::of($data)
-            ->addColumn('action', function($d) {
+            ->addColumn('action', function ($d) {
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_type') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_type').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
@@ -64,11 +67,12 @@ class ExpenseTypeController extends Controller
     public function create()
     {
         $view = view('master.expenses.types.form')->render();
+
         return response()->json([
             'message' => 'Success',
             'view' => $view,
             'url' => '/expenses/type',
-            'method' => 'POST'
+            'method' => 'POST',
         ]);
     }
 
@@ -81,7 +85,7 @@ class ExpenseTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:expense_types,name'
+            'name' => 'required|unique:expense_types,name',
         ], [
             'name.required' => __('view.name_required'),
             'name.unique' => __('view.name_unique'),
@@ -89,6 +93,7 @@ class ExpenseTypeController extends Controller
         $data = new ExpenseType();
         $data->name = $request->name;
         $data->save();
+
         return response()->json(['message' => 'Success update type']);
     }
 
@@ -113,11 +118,12 @@ class ExpenseTypeController extends Controller
     {
         $data = ExpenseType::find($id);
         $view = view('master.expenses.types.form', compact('data'))->render();
+
         return response()->json([
             'message' => 'Success',
             'view' => $view,
-            'url' => '/expenses/type/' . $id,
-            'method' => 'PUT'
+            'url' => '/expenses/type/'.$id,
+            'method' => 'PUT',
         ]);
     }
 
@@ -134,14 +140,15 @@ class ExpenseTypeController extends Controller
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('expense_types')->ignore($data)
-            ]
+                Rule::unique('expense_types')->ignore($data),
+            ],
         ], [
             'name.required' => __('view.name_required'),
             'name.unique' => __('view.name_unique'),
         ]);
         $data->name = $request->name;
         $data->save();
+
         return response()->json(['message' => 'Success update type']);
     }
 

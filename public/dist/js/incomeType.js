@@ -1,1 +1,53 @@
-window.createType=function(e){openModalWithValue("GET","form-income-type","modalIncomeType","modalIncomeTypeLabel",e,base_url+"/income/type/create")},window.updateForm=function(e,t){openModalWithValue("GET","form-income-type","modalIncomeType","modalIncomeTypeLabel",t,base_url+"/income/type/"+e+"/edit")},window.saveItem=function(){var e=$("#form-income-type"),t=e.serialize(),o=e.attr("method"),n=e.attr("action");$("#status").prop("checked"),$.ajax({type:o,url:n,data:t,beforeSend:function(){disableButton("btn-save"),disableButton("btn-cancel")},success:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!1,e.message),closeModal("modalIncomeType"),dt_income_type.ajax.reload()},error:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!0,e)}})},window.deleteItem=function(e,t){var o=base_url+"/income/type/".concat(e);deleteMaster(t,"Yes! Delete it","Cancel",o,dt_income_type)};
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!************************************!*\
+  !*** ./resources/js/incomeType.js ***!
+  \************************************/
+function createType(text) {
+  openModalWithValue('GET', 'form-income-type', 'modalIncomeType', 'modalIncomeTypeLabel', text, base_url + '/income/type/create');
+}
+function updateForm(id, text) {
+  openModalWithValue('GET', 'form-income-type', 'modalIncomeType', 'modalIncomeTypeLabel', text, base_url + '/income/type/' + id + '/edit');
+}
+function saveItem() {
+  var form = $('#form-income-type');
+  var data = form.serialize();
+  var method = form.attr('method');
+  var url = form.attr('action');
+  var status = 0;
+  if ($('#status').prop('checked')) {
+    status = 1;
+  }
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    beforeSend: function beforeSend() {
+      disableButton('btn-save');
+      disableButton('btn-cancel');
+    },
+    success: function success(res) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(false, res.message);
+      closeModal('modalIncomeType');
+      dt_income_type.ajax.reload();
+    },
+    error: function error(err) {
+      ;
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(true, err);
+    }
+  });
+}
+function deleteItem(id, text) {
+  var url = base_url + "/income/type/".concat(id);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_income_type);
+}
+window.createType = createType;
+window.updateForm = updateForm;
+window.saveItem = saveItem;
+window.deleteItem = deleteItem;
+/******/ })()
+;

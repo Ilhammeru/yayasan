@@ -26,30 +26,32 @@ class ExpenseCategoryController extends Controller
         breadcrumb([
             [
                 'name' => __('view.permissions'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.index');
+
+        return view($this->vp.'.index');
     }
 
     /**
      * Function to generate data for DataTable
-     * 
+     *
      * @return DataTables
      */
     public function ajax()
     {
         $data = ExpenseCategory::all();
+
         return DataTables::of($data)
-            ->addColumn('action', function($d) {
+            ->addColumn('action', function ($d) {
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_category') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_category').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
@@ -64,12 +66,13 @@ class ExpenseCategoryController extends Controller
      */
     public function create()
     {
-        $view = view($this->vp . '.form')->render();
+        $view = view($this->vp.'.form')->render();
+
         return response()->json([
             'message' => 'Success',
             'view' => $view,
             'url' => '/expenses/category',
-            'method' => 'POST'
+            'method' => 'POST',
         ]);
     }
 
@@ -82,7 +85,7 @@ class ExpenseCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:expense_categories,name'
+            'name' => 'required|unique:expense_categories,name',
         ], [
             'name.required' => __('view.name_required'),
             'name.unique' => __('view.name_unique'),
@@ -114,12 +117,13 @@ class ExpenseCategoryController extends Controller
     public function edit($id)
     {
         $data = ExpenseCategory::find($id);
-        $view = view($this->vp . '.form', compact('data'))->render();
+        $view = view($this->vp.'.form', compact('data'))->render();
+
         return response()->json([
             'message' => 'Success',
             'view' => $view,
-            'url' => '/expenses/category/' . $id,
-            'method' => 'PUT'
+            'url' => '/expenses/category/'.$id,
+            'method' => 'PUT',
         ]);
     }
 
@@ -136,8 +140,8 @@ class ExpenseCategoryController extends Controller
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('expense_categories')->ignore($data)
-            ]
+                Rule::unique('expense_categories')->ignore($data),
+            ],
         ], [
             'name.required' => __('view.name_required'),
             'name.unique' => __('view.name_unique'),

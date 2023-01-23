@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\IncomeCategory;
 use App\Models\IncomeItem;
+use App\Models\IncomeMethod;
+use App\Models\IncomeType;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,6 +18,7 @@ class IncomeCategoryController extends Controller
     {
         $this->vp = 'master.income';
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,14 +29,15 @@ class IncomeCategoryController extends Controller
         breadcrumb([
             [
                 'name' => __('view.income_category'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.category.index');
+
+        return view($this->vp.'.category.index');
     }
 
     public function ajax()
@@ -41,15 +45,18 @@ class IncomeCategoryController extends Controller
         $data = IncomeCategory::all();
 
         return DataTables::of($data)
-            ->addColumn('action', function($d) {
+            ->editColumn('income_type_id', function($d) {
+                return ucfirst($d->type->name);
+            })
+            ->addColumn('action', function ($d) {
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_income_category') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_income_category').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'income_type_id'])
             ->make(true);
     }
 
@@ -60,7 +67,9 @@ class IncomeCategoryController extends Controller
      */
     public function create()
     {
-        $view = view($this->vp . '.category.form')->render();
+        $types = IncomeType::all();
+        $view = view($this->vp.'.category.form', compact('types'))->render();
+
         return $this->render_response($view, '/income/category/0', 'PUT');
     }
 
@@ -72,7 +81,6 @@ class IncomeCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        
     }
 
     /**
@@ -95,8 +103,17 @@ class IncomeCategoryController extends Controller
     public function edit($id)
     {
         $data = IncomeCategory::find($id);
-        $view = view($this->vp . '.category.form', compact('data'))->render();
-        return $this->render_response($view, '/income/category/' . $id, 'PUT');
+        $types = IncomeType::all();
+        $types = collect($types)->map(function ($item) use ($data) {
+            $item['selected'] = '';
+            if ($item->id == $data->income_type_id) {
+                $item['selected'] = 'selected';
+            }
+            return $item;
+        });
+        $view = view($this->vp.'.category.form', compact('data', 'types'))->render();
+
+        return $this->render_response($view, '/income/category/'.$id, 'PUT');
     }
 
     /**
@@ -108,16 +125,17 @@ class IncomeCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = ['name' => 'required'];
+        $rules = ['name' => 'required', 'income_type_id' => 'required'];
         if ($id != 0) {
             $rules['name'] = [
                 'required',
-                Rule::unique('income_categories')->ignore($id)
+                Rule::unique('income_categories')->ignore($id),
             ];
         }
         $request->validate($rules, [
             'name.required' => __('view.name_required'),
             'name.unique' => __('view.name_unique'),
+            'income_type_id.required' => __('view.income_method_required')
         ]);
 
         $model = new IncomeCategory();
@@ -125,6 +143,7 @@ class IncomeCategoryController extends Controller
             $model = IncomeCategory::find($id);
         }
         $model->name = $request->name;
+        $model->income_type_id = $request->income_type_id;
         $model->save();
 
         return $this->success_response(__('view.success_update_income_category'));
@@ -143,9 +162,10 @@ class IncomeCategoryController extends Controller
         if ($check) {
             return $this->error_response(__('view.delete_failed_bcs_relation'));
         }
-        
+
         $data = IncomeCategory::find($id);
         $data->delete();
+
         return $this->success_response(__('view.success_delete_item'));
     }
 }

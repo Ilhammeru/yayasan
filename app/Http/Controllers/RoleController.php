@@ -24,38 +24,40 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         breadcrumb([
             [
                 'name' => __('view.intitutions'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.index');
+
+        return view($this->vp.'.index');
     }
 
     /**
      * Generate data for datatables
-     * 
+     *
      * @return DataTables
      */
     public function ajax()
     {
         $data = Role::all();
+
         return DataTables::of($data)
-            ->editColumn('name', function($d) {
+            ->editColumn('name', function ($d) {
                 return strtoupper($d->name);
             })
-            ->addColumn('action', function($d) {
+            ->addColumn('action', function ($d) {
                 // $text =
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_role') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_role').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
@@ -72,7 +74,8 @@ class RoleController extends Controller
     {
         $s = new PermissionService();
         $permissions = $s->get_permission_group();
-        $view = view($this->vp . '.form', compact('permissions'))->render();
+        $view = view($this->vp.'.form', compact('permissions'))->render();
+
         return response()->json(['message' => 'Success', 'view' => $view]);
     }
 
@@ -86,7 +89,7 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'permissions' => 'required'
+            'permissions' => 'required',
         ]);
         $name = strtolower($request->name);
         $role = Role::create(['name' => $name]);
@@ -95,6 +98,7 @@ class RoleController extends Controller
             $permission = Permission::findById($p[$a]);
             $role->givePermissionTo($permission);
         }
+
         return response()->json(['message' => 'Success create role']);
     }
 
@@ -120,7 +124,8 @@ class RoleController extends Controller
         $data = Role::findById($id);
         $s = new PermissionService();
         $permissions = $s->get_permission_group($data);
-        $view = view($this->vp . '.form', compact('data', 'permissions'))->render();
+        $view = view($this->vp.'.form', compact('data', 'permissions'))->render();
+
         return response()->json(['message' => 'Success', 'view' => $view]);
     }
 
@@ -135,7 +140,7 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'permissions' => 'required'
+            'permissions' => 'required',
         ]);
         $data = Role::findById($id);
         $current_permissions = $data->permissions;
@@ -147,7 +152,7 @@ class RoleController extends Controller
                 $data->revokePermissionTo($cp);
             }
         }
-        
+
         // assign permission
         for ($a = 0; $a < count($permissions); $a++) {
             $permit = Permission::findById($permissions[$a]);

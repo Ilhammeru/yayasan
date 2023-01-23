@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('permissions', function(Blueprint $table) {
+        Schema::table('permissions', function (Blueprint $table) {
             $table->integer('permission_group_id')->default(0);
         });
     }
@@ -31,7 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('permissions', function(Blueprint $table) {
+        Schema::table('permissions', function (Blueprint $table) {
             $table->dropColumn('permission_group_id');
         });
         Schema::dropIfExists('permission_groups');

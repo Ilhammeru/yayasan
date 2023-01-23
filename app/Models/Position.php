@@ -10,10 +10,12 @@ use Spatie\Permission\Models\Role;
 class Position extends Model
 {
     use HasFactory;
-    protected $table = 'positions';
-    protected $fillable = ['name', 'role_id'];
 
-    public function role():BelongsTo
+    protected $table = 'positions';
+
+    protected $fillable = ['name', 'role_id', 'is_responsible_for_foundation_finance'];
+
+    public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'role_id');
     }

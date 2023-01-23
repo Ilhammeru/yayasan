@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
     use HasFactory;
+
     protected $fillable = ['code', 'name'];
+
     protected $hidden = ['created_at', 'updated_at'];
 }

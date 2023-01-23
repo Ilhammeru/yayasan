@@ -71,6 +71,15 @@
             .mb-3 {
                 margin-bottom: 10px;
             }
+            .w-25 {
+                width: 25% !important;
+            }
+            .w-50 {
+                width: 50% !important;
+            }
+            .w-100 {
+                width: 100% !important;
+            }
             .d-none {
                 display: none;
             }
@@ -80,6 +89,72 @@
 
             .no-border {
                 border: 0;
+            }
+
+            .themed-color-white {
+                color: #fff !important;
+            }
+
+            .select2-selection.select2-selection--single {
+                height: 35px !important;
+            }
+
+            .select2-selection__rendered {
+                line-height: 35px !important;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 35px !important;
+            }
+
+            #global-modal .modal-dialog,
+            #invoice-modal .modal-dialog {
+                width: 100vw;
+                max-width: none;
+                height: 100%;
+                margin: 0;
+            }
+
+            #global-modal .modal-dialog .modal-content,
+            #invoice-modal .modal-dialog .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                pointer-events: auto;
+                background-color: #fff;
+                background-clip: padding-box;
+            }
+
+            #global-modal .modal-header,
+            #invoice-modal .modal-header {
+                padding: 15px 15px 14px;
+                border-bottom: 1px solid #eeeeee;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                background: #fff;
+                display: flex;
+                align-content: center;
+                justify-content: space-between;
+            }
+
+            #global-modal .modal-header::before,
+            #global-modal .modal-header::after,
+            #invoice-modal .modal-header::before,
+            #invoice-modal .modal-header::after {
+                display: none;
+            }
+
+            #global-modal .modal-body,
+            #invoice-modal .modal-body {                
+                position: relative;
+                flex: 1 1 auto;
+                padding: 1rem;
+                overflow-y: auto;
+                background: #fff;
             }
         </style>
 
@@ -173,6 +248,40 @@
                         <!-- end::content-header -->
 
                         @yield('content')
+
+                        @include('layouts.modal')
+                        {{-- modal send-form --}}
+                        <div class="modal animation-fadeInQuick"
+                            id="modal-send-wallet">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    {{-- <div class="modal-header">
+                                        <h5 class="modal-title">Modal title</h5>
+                                        <button type="button"
+                                            class="btn"
+                                            type="button"
+                                            onclick="closeModal('invoice-modal')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div> --}}
+                                    <div class="modal-body">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button"
+                                            class="btn btn-secondary btn-close"
+                                            data-bs-dismiss="modal"
+                                            onclick="closeModal('modal-send-wallet')">
+                                            @lang('view.close')
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-primary btn-save"
+                                            onclick="sendWallet()">
+                                            @lang('view.send')
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
                     </div>
                     <!-- END Page Content -->

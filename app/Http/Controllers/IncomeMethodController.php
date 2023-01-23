@@ -16,6 +16,7 @@ class IncomeMethodController extends Controller
     {
         $this->vp = 'master.income';
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,14 +27,15 @@ class IncomeMethodController extends Controller
         breadcrumb([
             [
                 'name' => __('view.income_method'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.method.index');
+
+        return view($this->vp.'.method.index');
     }
 
     /**
@@ -44,11 +46,11 @@ class IncomeMethodController extends Controller
         $data = IncomeMethod::all();
 
         return DataTables::of($data)
-            ->addColumn('action', function($d) {
+            ->addColumn('action', function ($d) {
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_income_method') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_income_method').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
@@ -63,7 +65,8 @@ class IncomeMethodController extends Controller
      */
     public function create()
     {
-        $view = view($this->vp . '.method.form')->render();
+        $view = view($this->vp.'.method.form')->render();
+
         return $this->render_response($view, '/income/method/0', 'PUT');
     }
 
@@ -98,8 +101,9 @@ class IncomeMethodController extends Controller
     public function edit($id)
     {
         $data = IncomeMethod::find($id);
-        $view = view($this->vp . '.method.form', compact('data'))->render();
-        return $this->render_response($view, '/income/method/' . $id, 'PUT');
+        $view = view($this->vp.'.method.form', compact('data'))->render();
+
+        return $this->render_response($view, '/income/method/'.$id, 'PUT');
     }
 
     /**
@@ -115,7 +119,7 @@ class IncomeMethodController extends Controller
         if ($id != 0) {
             $rules['name'] = [
                 'required',
-                Rule::unique('income_categories')->ignore($id)
+                Rule::unique('income_categories')->ignore($id),
             ];
         }
         $request->validate($rules, [
@@ -146,9 +150,10 @@ class IncomeMethodController extends Controller
         if ($check) {
             return $this->error_response(__('view.delete_failed_bcs_relation'));
         }
-        
+
         $data = IncomeMethod::find($id);
         $data->delete();
+
         return $this->success_response(__('view.success_delete_item'));
     }
 }

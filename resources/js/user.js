@@ -94,7 +94,7 @@ function getClasses(e) {
     let val = e.value;
     $.ajax({
         type: 'POST',
-        url: "{{ route('users.get-class') }}",
+        url: base_url + '/get-class',
         data: {
             institution_id: val
         },
@@ -107,6 +107,7 @@ function getClasses(e) {
             $('#institution_class_level_id').prop('disabled', true);
         },
         success: function(res) {
+            console.log('rssses', res);
             let data = res.data;
             let option = `<option></option>`;
             for (let a = 0; a < data.length; a++) {
@@ -128,7 +129,7 @@ function getLevels(e) {
     let val = e.value;
     $.ajax({
         type: 'POST',
-        url: "{{ route('users.get-level') }}",
+        url: base_url + '/get-level',
         data: {
             class_id: val
         },

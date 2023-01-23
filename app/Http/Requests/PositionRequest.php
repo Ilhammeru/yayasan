@@ -27,19 +27,20 @@ class PositionRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'role_id' => 'required'
+            'role_id' => 'required',
         ];
     }
 
     /**
-    * Get the error messages for the defined validation rules.*
-    * @return array
-    */
+     * Get the error messages for the defined validation rules.*
+     *
+     * @return array
+     */
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'message' => $validator->errors()->all(),
-            'status' => true
+            'status' => true,
         ], 422));
     }
 
@@ -52,7 +53,7 @@ class PositionRequest extends FormRequest
     {
         return [
             'name.required' => __('view.name_required'),
-            'role_id.required' => __('view.role_required')
+            'role_id.required' => __('view.role_required'),
         ];
     }
 }

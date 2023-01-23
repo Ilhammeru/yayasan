@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class InstitutionClass extends Model
 {
     use HasFactory;
+
     protected $table = 'institution_class';
+
     protected $fillable = [
         'intitution_id',
-        'name'
+        'name',
     ];
+
     protected $hidden = [
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function levels(): HasMany
@@ -25,7 +28,7 @@ class InstitutionClass extends Model
         return $this->hasMany(InstitutionClassLevel::class, 'institution_class_id');
     }
 
-    public function institution():BelongsTo
+    public function institution(): BelongsTo
     {
         return $this->belongsTo(Intitution::class, 'intitution_id');
     }

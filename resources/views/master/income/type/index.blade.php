@@ -15,7 +15,7 @@
                     <tr>
                     	<th>#</th>
                         <th>{{ __('view.name') }}</th>
-                        <th>{{ __('view.action') }}</th>
+                        {{-- <th>{{ __('view.action') }}</th> --}}
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -59,7 +59,7 @@
                 className: 'text-center'
             },
             {data: 'name', name: 'name'},
-            {data: 'action', name: 'action', className: 'text-center', orderable: false},
+            // {data: 'action', name: 'action', className: 'text-center', orderable: false},
         ];
         let dt_route = base_url + '/income/type/ajax'
         let dt_income_type = setDataTable(

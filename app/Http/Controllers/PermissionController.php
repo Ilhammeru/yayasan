@@ -29,14 +29,15 @@ class PermissionController extends Controller
         breadcrumb([
             [
                 'name' => __('view.permissions'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.index');
+
+        return view($this->vp.'.index');
     }
 
     /**
@@ -47,12 +48,13 @@ class PermissionController extends Controller
     public function create()
     {
         $groups = PermissionGroup::all();
-        $view = view($this->vp . '.form', compact('groups'))->render();
+        $view = view($this->vp.'.form', compact('groups'))->render();
+
         return response()->json([
             'message' => 'Success',
             'view' => $view,
             'method' => 'POST',
-            'url' => '/permissions'
+            'url' => '/permissions',
         ]);
     }
 
@@ -62,15 +64,16 @@ class PermissionController extends Controller
     public function ajax()
     {
         $data = Permission::all();
+
         return DataTables::of($data)
-            ->editColumn('name', function($d) {
+            ->editColumn('name', function ($d) {
                 return ucfirst($d->name);
             })
-            ->addColumn('action', function($d) {
+            ->addColumn('action', function ($d) {
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_permission') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_permission').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
@@ -90,19 +93,21 @@ class PermissionController extends Controller
         try {
             $request->validate([
                 'name' => 'required',
-                'group' => 'required'
+                'group' => 'required',
             ], [
                 'name.required' => __('view.name_required'),
-                'group.required' => __('view.group_required')
+                'group.required' => __('view.group_required'),
             ]);
-    
+
             Permission::create(['name' => strtolower($request->name), 'permission_group_id' => $request->group]);
-            
+
             DB::commit();
+
             return response()->json(['message' => 'Success create permission']);
         } catch (\Throwable $th) {
             setup_log('save permission', $th);
             DB::rollBack();
+
             return response()->json(['message' => 'Failed to save permission'], 500);
         }
     }
@@ -128,12 +133,13 @@ class PermissionController extends Controller
     {
         $data = Permission::findById($id);
         $groups = PermissionGroup::all();
-        $view = view($this->vp . '.form', compact('data', 'groups'))->render();
+        $view = view($this->vp.'.form', compact('data', 'groups'))->render();
+
         return response()->json([
             'message' => 'Success',
             'view' => $view,
             'method' => 'PUT',
-            'url' => '/permissions/' . $id
+            'url' => '/permissions/'.$id,
         ]);
     }
 
@@ -149,14 +155,14 @@ class PermissionController extends Controller
         $rule = [
             'name' => [
                 'required',
-                Rule::unique('permissions')->ignore($id)
+                Rule::unique('permissions')->ignore($id),
             ],
-            'group' => 'required'
+            'group' => 'required',
         ];
         $request->validate($rule, [
             'name.required' => __('view.name_required'),
             'name.unique' => __('view.name_unique'),
-            'group.required' => __('view.group_required')
+            'group.required' => __('view.group_required'),
         ]);
 
         $data = Permission::findById($id);

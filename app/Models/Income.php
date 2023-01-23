@@ -2,21 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\ExternalUser;
-use App\Models\IncomeItem;
-use App\Models\IncomeMedia;
-use App\Models\IncomeMethod;
-use App\Models\IncomePayment;
-use App\Models\IncomeType;
-use App\Models\InternalUser;
-use Illuminate\Database\Eloquent\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Income extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'invoice_number',
         'user_type',
@@ -32,6 +26,7 @@ class Income extends Model
         'payment_status',
         'message',
     ];
+
     protected $hidden = ['updated_at'];
 
     // #################################### REALTIONSHIP ###########################
@@ -61,7 +56,7 @@ class Income extends Model
         return $this->BelongsTo(InternalUser::class, 'user_id');
     }
 
-    public function external():BelongsTo
+    public function external(): BelongsTo
     {
         return $this->belongsTo(ExternalUser::class, 'user_id');
     }
@@ -73,30 +68,32 @@ class Income extends Model
 
     // ################################### END RELATIONSHIP ######################
 
-    public function paymentStatusText():Attribute
+    public function paymentStatusText(): Attribute
     {
         $text = __('view.unpaid');
         if ($this->payment_status == 1) {
             $text = __('view.paid');
-        } else if ($this->payment_status == 2) {
+        } elseif ($this->payment_status == 2) {
             $text = __('view.partially_paid');
         }
+
         return Attribute::make(
-            get: fn() => $text,
+            get: fn () => $text,
         );
     }
 
-    public function paymentStatusColor():Attribute
+    public function paymentStatusColor(): Attribute
     {
         if ($this->payment_status == 3) {
             $color = '#7F1313';
-        } else if ($this->payment_status == 2) {
+        } elseif ($this->payment_status == 2) {
             $color = '#0B26DA';
         } else {
             $color = '#0CCE39';
         }
+
         return Attribute::make(
-            get: fn() => $color
+            get: fn () => $color
         );
     }
 
@@ -104,20 +101,21 @@ class Income extends Model
     {
         if ($this->user_type == 1) { // user internal
             return $this->internal;
-        } else if ($this->user_type == 2) { // user external
+        } elseif ($this->user_type == 2) { // user external
             return $this->external;
         }
     }
 
-    public function fullPaymentOnly():Attribute
+    public function fullPaymentOnly(): Attribute
     {
         $method = $this->method->name;
+
         return Attribute::make(
-            get: fn() => strtolower($method) == 'tunai' ? true : false
+            get: fn () => strtolower($method) == 'tunai' ? true : false
         );
     }
 
-    public function remainingAmount():Attribute
+    public function remainingAmount(): Attribute
     {
         $payments = $this->payments;
         $remaining = $this->total_amount;
@@ -125,29 +123,31 @@ class Income extends Model
             $total_payment = collect($payments)->sum('amount');
             $remaining = $this->total_amount - $total_payment;
         }
+
         return Attribute::make(
-            get: fn() => $remaining
+            get: fn () => $remaining
         );
     }
 
-    public function paymentIsComplete():Attribute
+    public function paymentIsComplete(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->remaining_amount == 0 ? true : false
+            get: fn () => $this->remaining_amount == 0 ? true : false
         );
     }
 
-    public function paymentIsPartial():Attribute
+    public function paymentIsPartial(): Attribute
     {
         $res = false;
-        if(
+        if (
             $this->remaining_amount != 0 &&
             $this->remaining_amount < $this->total_amount
         ) {
             $res = true;
         }
+
         return Attribute::make(
-            get: fn() => $res
+            get: fn () => $res
         );
     }
 }

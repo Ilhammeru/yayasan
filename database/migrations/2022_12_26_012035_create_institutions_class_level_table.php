@@ -31,7 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('institutions_class_level', function(Blueprint $table) {
+        Schema::table('institutions_class_level', function (Blueprint $table) {
             $table->dropForeign(['institution_class_id']);
         });
         Schema::dropIfExists('institutions_class_level');

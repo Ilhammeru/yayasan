@@ -143,6 +143,7 @@ Table incomes {
     created_by int
     status boolean [note: '0 for hold, 1 for received by treasurer of foundation', default: 0]
     payment_status tinyint [note: '1 for paid, 2 for partially paid, 3 for unpaid', default: 3]
+    message text
     created_at timestamp
     updated_at timestamp
 }
@@ -152,6 +153,10 @@ Table income_items {
     income_id int [ref: > incomes.id]
     income_category_id int [ref: > income_categories.id]
     amount float
+    description text
+    month tinyint [note: 'For monthly payment, should have value between 1 - 12']
+    week tinyint [note: 'For weekly payment, should have value between 1 - 5']
+    day tinyint [note: 'For daily payment, should have value between 1 - 31']
     created_at timestamp
     updated_at timestamp
 }
@@ -173,6 +178,77 @@ Table cash_logs {
     debit float
     credit float
     transaction_time timestamp
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table payments {
+    id int [pk, increment]
+    invoice_number_group varchar ['This should be filled when user pays for items simultaneously']
+    invoice_number varchar [not null]
+    amount double [default 0]
+    payment_date date
+    payment_time time
+    is_annualy boolean
+    is_monthly boolean
+    is_weekly boolean
+    is_daily boolean
+    annualy tinyint [note: 'This value should be between 1 - 12']
+    monthly tinyint [note: 'This value should be between 1 - 12']
+    weekly tinyint [note: 'This value should be between 1 - 5']
+    daily tinyint [note: 'This value should be between 1 - 31']
+    status tinyint [note: '1 paid, 2 pending, 3 draft']
+    user_type tinyint [note: '1 for internal user , 2 for external user']
+    user_id int
+    income_category_id int
+    income_method_id int [note: 'payment method, related to income_methods table']
+    institution_id int [note: 'Related to intitutions table']
+    institution_class_id int
+    institution_class_level_id int
+    payment_at_class tinyint [note: 'This field as marker for user, in which class he was paid this payment']
+    payment_target_position int [note: 'this column to record to which position this payment was received, related to positions table']
+    payment_target_user int [note: 'this column to record to whom this payment was received, related to employees table']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table payment_docs {
+    id int [pk, increment]
+    payment_id int
+    path text
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table wallets {
+    id int [pk, increment]
+    model varchar [note: 'This will be filled with model name']
+    user_id int [note: 'Related to id column in stored model']
+    debit double
+    credit double
+    source_id int [note: 'Related to payments table']
+    source_text varchar [note: 'Description from what payment this amount received']
+    income_category_id int [note: 'to group by category on digital wallets']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table account_transaction {
+    id int [pk, increment]
+    account_id int
+    debit double [default: '0']
+    credit double [default: '0']
+    status tinyint [note: '1 for success, 2 for pending']
+    source_id int [note: 'Related to income_categories table']
+    description text
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table account_transaction_docs {
+    id int [pk, increment]
+    account_transaction_id int
+    path text
     created_at timestamp
     updated_at timestamp
 }

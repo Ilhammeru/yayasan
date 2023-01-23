@@ -1,10 +1,13 @@
 {
     "private": true,
     "dependencies": {
+        "countup.js": "^2.3.2",
         "filepond-plugin-file-validate-type": "^1.2.8",
         "izitoast": "^1.4.0",
         "laravel-mix-polyfill": "^3.0.1",
+        "micromodal": "^0.4.10",
         "sweetalert": "^2.1.2",
+        "sweetalert2": "^11.7.0",
         "tippy.js": "^6.3.7"
     },
     "scripts": {

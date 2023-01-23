@@ -4,9 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
@@ -18,33 +19,33 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        DB::table('model_has_roles')
+            ->where('role_id', '>', '0')
+            ->delete();
+        DB::table('model_has_permissions')
+            ->where('permission_id', '>', '0')
+            ->delete();
+        Role::truncate();
+        Schema::enableForeignKeyConstraints();
 
         $alls = [
             'kepala sekolah',
             'wakil kepala',
             'tu',
             'wali kelas',
-            'guru'
+            'guru',
+            'bendahara yayasan'
         ];
-        foreach($alls as $key => $all) {
-            $j = Role::create(['name' => $all]);
+        foreach ($alls as $all) {
+            Role::create(['name' => $all]);
         }
-        $kp = Role::findByName('kepala sekolah');
+        // $kp = Role::findByName('kepala sekolah');
+        // $by = Role::findByname('bendahara yayasan');
         // $wkp = Role::create(['name' => 'wakil kepala']);
         // $tu = Role::create(['name' => 'tu']);
         // $wk = Role::create(['name' => 'wali kelas']);
         // $g = Role::create(['name' => 'guru']);
-
-        $kp_user = User::insert([
-            'username' => 'kepalasekolah',
-            'password' => Hash::make('admin'),
-            'role' => $kp->id,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-        
-        $u_kp = User::where('username', 'kepalasekolah')->first();
-        $u_kp->assignRole($kp);
     }
 }

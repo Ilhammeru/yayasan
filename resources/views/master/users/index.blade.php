@@ -58,7 +58,7 @@
             border-top: none;
         }
 
-        @if ($type == 'external')
+        /* @if ($type == 'external') */
             .input-group:has(input[type="search"]) {
                 display: none !important;
             }
@@ -67,7 +67,7 @@
             }
             
             
-        @endif
+        /* @endif */
     </style>
 @endpush
 

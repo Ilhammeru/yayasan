@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\InstitutionClassLevel;
-use App\Models\Intitution;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +19,7 @@ class InternalUserFactory extends Factory
     {
         $test = InstitutionClassLevel::first();
         $ins = InstitutionClassLevel::with('class.institution')->find($test->id);
-        
+
         return [
             'name' => fake()->name(),
             'institution_id' => $ins->class->institution->id,
@@ -33,7 +32,8 @@ class InternalUserFactory extends Factory
             'province_id' => 4,
             'institution_class_id' => $ins->class->id,
             'institution_class_level_id' => $ins->id,
-            'status' => true
+            'status' => true,
+            'gender' => fake()->randomElement(['L', 'P']),
         ];
     }
 }

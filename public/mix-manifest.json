@@ -1,15 +1,15 @@
 {
-    "/dist/js/intitution.js": "/dist/js/intitution.js?id=d41d8cd98f00b204e9800998ecf8427e",
-    "/dist/js/role.js": "/dist/js/role.js?id=d41d8cd98f00b204e9800998ecf8427e",
-    "/dist/js/position.js": "/dist/js/position.js?id=7a0fdc084c71b2492227e8ecea23a580",
-    "/dist/js/employee.js": "/dist/js/employee.js?id=d41d8cd98f00b204e9800998ecf8427e",
-    "/dist/js/base.js": "/dist/js/base.js?id=1a685eddb01127050ad680c0bf1477c6",
-    "/dist/js/permission.js": "/dist/js/permission.js?id=d41d8cd98f00b204e9800998ecf8427e",
-    "/dist/js/user.js": "/dist/js/user.js?id=f91e618810214fb1a7288c9c75e765e8",
-    "/dist/js/income.js": "/dist/js/income.js?id=e950e8465a338f49f9bfc1acc4b82b53",
-    "/dist/js/incomeType.js": "/dist/js/incomeType.js?id=94bf22371481ea7b27a74769194aa822",
-    "/dist/js/incomeMethod.js": "/dist/js/incomeMethod.js?id=22a252587883b7caf75800c21d4d1b7a",
-    "/dist/js/mainIncome.js": "/dist/js/mainIncome.js?id=d4aaa1cefd6486425e459fa37b425354",
-    "/dist/js/master.js": "/dist/js/master.js?id=ea23d4a7a0c005240b41445977b6ac53",
-    "/assets/js/app.js": "/assets/js/app.js?id=199bb6805ec547c8dfc93def3b7b329e"
+    "/dist/js/intitution.js": "/dist/js/intitution.js?id=a47a2beb6d0188959dbbe54547e979ec",
+    "/dist/js/role.js": "/dist/js/role.js?id=bd6ffba3ef5299384ba1fa8361c7f9a6",
+    "/dist/js/position.js": "/dist/js/position.js?id=d601e4e8e43b4fdfadef63cc62c2d399",
+    "/dist/js/employee.js": "/dist/js/employee.js?id=3e086ee1115ac58c00c8df86b7e3da4d",
+    "/dist/js/base.js": "/dist/js/base.js?id=11123e9a88b826068100d741635eefd0",
+    "/dist/js/permission.js": "/dist/js/permission.js?id=f3db0dba743d8b3577a008878bb2c80e",
+    "/dist/js/user.js": "/dist/js/user.js?id=03873a1205d1b3cbf2750e67865fcfc0",
+    "/dist/js/income.js": "/dist/js/income.js?id=55999fafa6e2453fa38bd02301cc58d2",
+    "/dist/js/incomeType.js": "/dist/js/incomeType.js?id=c76382fab296c3768e67ee429ebdb7b0",
+    "/dist/js/incomeMethod.js": "/dist/js/incomeMethod.js?id=ee17f043c9772e21b7a84c990f2d7811",
+    "/dist/js/mainIncome.js": "/dist/js/mainIncome.js?id=555c7ca4a31829b1257dbe3e25503139",
+    "/dist/js/master.js": "/dist/js/master.js?id=2f534bc3a3195cc66891ee7966c6186d",
+    "/assets/js/app.js": "/assets/js/app.js?id=f9c3f8cb296810dab27af375a0d7579a"
 }

@@ -15,6 +15,7 @@
                     <tr>
                     	<th>#</th>
                         <th>{{ __('view.name') }}</th>
+                        <th>{{ __('view.income_type') }}</th>
                         <th>{{ __('view.action') }}</th>
                     </tr>
                 </thead>
@@ -59,6 +60,7 @@
                 className: 'text-center'
             },
             {data: 'name', name: 'name'},
+            {data: 'income_type_id', name: 'income_type_id'},
             {data: 'action', name: 'action', className: 'text-center', orderable: false},
         ];
         let dt_route = base_url + '/income/category/ajax'

@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class IncomeMedia extends Model
 {
     use HasFactory;
+
     protected $fillable = ['income_id', 'path'];
 }

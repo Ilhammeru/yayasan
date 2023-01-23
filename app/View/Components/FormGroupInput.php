@@ -7,11 +7,17 @@ use Illuminate\View\Component;
 class FormGroupInput extends Component
 {
     public $name;
+
     public $val;
+
     public $id;
+
     public $additional_class;
+
     public $label;
+
     public $placeholder;
+
     public $required;
 
     /**
@@ -27,8 +33,7 @@ class FormGroupInput extends Component
         $label = 'Label',
         $placeholder = '',
         $required = false
-    )
-    {
+    ) {
         $this->name = $name;
         $this->val = $val;
         $this->id = $id;

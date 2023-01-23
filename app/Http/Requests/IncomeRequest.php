@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rule;
 
 class IncomeRequest extends FormRequest
 {
@@ -29,21 +28,24 @@ class IncomeRequest extends FormRequest
         return [
             'user' => 'required',
             'amount_total' => 'required',
-            'due_date' => 'required',
+            // 'due_date' => 'required',
+            'attachments' => 'required',
             'income_method_id' => 'required',
             'income_type_id' => 'required',
             'invoice_number' => 'required',
             'items.*.price' => 'required',
+            'items.*.month' => 'required',
             'items.*.income_category_id' => 'required',
-            'remaining_bill' => 'required',
-            'transaction_start_date' => 'required' 
+            // 'remaining_bill' => 'required',
+            'transaction_start_date' => 'required',
         ];
     }
 
     /**
-    * Get the error messages for the defined validation rules.*
-    * @return array
-    */
+     * Get the error messages for the defined validation rules.*
+     *
+     * @return array
+     */
     protected function failedValidation(Validator $validator)
     {
         $errs = $validator->errors()->all();
@@ -52,7 +54,7 @@ class IncomeRequest extends FormRequest
         }
         throw new HttpResponseException(response()->json([
             'message' => $errs,
-            'status' => true
+            'status' => true,
         ], 422));
     }
 
@@ -72,9 +74,12 @@ class IncomeRequest extends FormRequest
             'invoice_number.required' => __('view.invoice_number_required'),
             'items.*.price.required' => __('view.items_required'),
             'items.*.income_category_id.required' => __('view.items_required'),
+            'items.*.month.required' => __('view.month_required'),
             'remaining_bill.required' => __('view.remaining_bill_required'),
-            'transaction_start_date.required' => __('view.transaction_start_date_required')
+            'transaction_start_date.required' => __('view.transaction_start_date_required'),
+            'attachments.required' => __('view.attachments_required'),
         ];
+
         return $rules;
     }
 }

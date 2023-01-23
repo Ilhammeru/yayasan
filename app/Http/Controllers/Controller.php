@@ -31,7 +31,7 @@ class Controller extends BaseController
         return response()->json([
             'message' => 'Success',
             'view' => $view,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }

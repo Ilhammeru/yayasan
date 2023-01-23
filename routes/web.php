@@ -3,9 +3,11 @@
 namespace yayasan\routes;
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Http\Request;
+use App\Models\Intitution;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
+use Vinkla\Hashids\Facades\Hashids;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// get institution list from redis
+$institutions = Redis::get('institutions');
+$institutions = json_decode($institutions, true);
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -27,11 +33,11 @@ Route::get('/js/lang.js', function () {
     $strings = Cache::rememberForever('lang.js', function () {
         $lang = config('app.locale');
 
-        $files   = glob(resource_path('lang/' . $lang . '/*.php'));
+        $files = glob(resource_path('lang/'.$lang.'/*.php'));
         $strings = [];
 
         foreach ($files as $file) {
-            $name           = basename($file, '.php');
+            $name = basename($file, '.php');
             $strings[$name] = require $file;
         }
 
@@ -39,24 +45,30 @@ Route::get('/js/lang.js', function () {
     });
 
     header('Content-Type: text/javascript');
-    echo('window.i18n = ' . json_encode($strings) . ';');
+    echo 'window.i18n = '.json_encode($strings).';';
     exit();
 })->name('assets.lang');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () use ($institutions) {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/', function() {
+    Route::get('/', function () {
         return redirect()->route('dashboard');
     })->name('default');
-    
+
     // begin::master
     Route::get('intitutions/ajax', 'IntitutionController@ajax')->name('intitutions.ajax');
+    Route::post('/intitutions/delete-class', 'IntitutionController@deleteClass')->name('intitutions.delete-class');
+    Route::post('/intitutions/delete-level', 'IntitutionController@deleteLevel')->name('intitutions.delete-level');
+    Route::post('/intitutions/show-class-level-form', 'IntitutionController@generateClassLevelForm')->name('intitutions.show-class-level-form');
+    Route::post('/intitutions/detail-data/intitutions', 'IntitutionController@detailDataInstitution')->name('intitutions.detail-data.institution');
+    Route::post('/intitutions/store-homeroom', 'IntitutionController@storeHomeroom')->name('intitutions.store-homeroom');
+    Route::get('/intitutions/show-homeroom-teacher', 'IntitutionController@showHomeroomTeacher')->name('intitutions.show-homeroom-teacher');
     Route::resource('intitutions', 'IntitutionController');
     // Route::resource('users', 'UsersController');
-    Route::prefix('users')->group(function() {
+    Route::prefix('users')->group(function () {
         Route::get('/users/internal', 'UsersController@index')->name('users.index.internal');
         Route::get('/users/external', 'UsersController@index')->name('users.index.external');
         Route::get('/{id}/edit/{type}', 'UsersController@edit')->name('users.edit');
@@ -67,8 +79,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/create/{type}', 'UsersController@create')->name('users.create');
     });
 
-    Route::group(['as' => 'expenses.'], function() {
-        Route::prefix('expenses')->group(function() {
+    Route::group(['as' => 'expenses.'], function () {
+        Route::prefix('expenses')->group(function () {
             Route::get('/category/ajax', 'ExpenseCategoryController@ajax')->name('category.ajax');
             Route::resource('/category', 'ExpenseCategoryController');
             Route::get('/method/ajax', 'ExpenseMethodController@ajax')->name('method.ajax');
@@ -80,8 +92,8 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::group(['as' => 'income.'], function() {
-        Route::prefix('income')->group(function() {
+    Route::group(['as' => 'income.'], function () {
+        Route::prefix('income')->group(function () {
             Route::get('/category/ajax', 'IncomeCategoryController@ajax')->name('category.ajax');
             Route::resource('/category', 'IncomeCategoryController');
             Route::get('/type/ajax', 'IncomeTypeController@ajax')->name('type.ajax');
@@ -106,7 +118,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/get-level', 'UsersController@getLevel')->name('users.get-level');
     // end::master
 
-
     // begin::incomes
     Route::get('incomes/ajax', 'IncomeController@ajax')->name('incomes.ajax');
     Route::post('/incomes/get-detail-user', 'IncomeController@getDetailuser')->name('invoices.get-detail-user');
@@ -118,8 +129,32 @@ Route::middleware('auth')->group(function () {
     Route::delete('/incomes/upload/proof-of-payment', 'IncomeController@deleteProof')->name('delete.proof');
     Route::post('/incomes/append-payment-detail', 'IncomeController@appendPaymentDetail');
     Route::post('/incomes/pay', 'IncomeController@pay')->name('incomes.pay');
+    Route::post('/incomes/pay-non-period', 'IncomeController@payNonPeriod')->name('incomes.pay-non-period');
     Route::post('/incomes/generate-transaction', 'IncomeController@generateTransaction')->name('incomes.generate-transaction');
     Route::post('/incomes/proof-of-payment', 'IncomeController@proofOfPayment')->name('incomes.proof-of-payment');
-    Route::resource('incomes', 'IncomeController');
+    Route::post('/incomes/generate-data', 'IncomeController@generateData')->name('incomes.generate-data');
+    foreach ($institutions as $i) {
+        Route::get('/incomes/' . Hashids::encode($i['id']), 'IncomeController@index')->name('incomes.index.' . $i['id']);
+    }
+    Route::get('incomes/{id}', 'IncomeController@show')->name('incomes.show');
+
+    // Override create route
+    Route::post('/incomes/invoice/monthly/form', 'IncomeController@create')->name('incomes.create');
+
+    Route::post('/incomes/change/monthly-income/by-level', 'IncomeController@changeMonthlyIncomceByLevel')->name('incomes.change.monthly-income.by-level');
+    Route::post('/incomes/invoice-non-period', 'IncomeController@invoiceNonPeriod')->name('incomes.invoice-non-period');
+    Route::post('/incomes/filter', 'IncomeController@filterIncome')->name('incomes.filter');
+    Route::get('/incomes/data/ajax', 'IncomeController@datatable')->name('incomes.data.ajax');
+
+    // Route::resource('incomes', 'IncomeController');
     // end::incomes
+
+    Route::get('/user/update-saldo', 'UsersController@updateSaldo')->name('users.update.saldo');
+    Route::get('/users/wallet/ajax', 'UsersController@walletAjax')->name('users.wallet.ajax');
+    Route::get('/users/wallet/detail/{user_id}', 'UsersController@detailWallet')->name('users.detail.saldo');
+    Route::post('/users/wallet/form/send', 'UsersController@formSendWallet')->name('users.wallet.send-form');
+    Route::post('/users/wallet/form-transfer-fund/send', 'UsersController@formTransferFund')->name('users.wallet.transfer-fund-form');
+    Route::post('/users/wallet/send/global', 'UsersController@sendWallet')->name('users.wallet.send');
+    Route::post('/users/upload/attachement/send-wallet', 'UsersController@uploadAttachment')->name('users.upload.attachment-send-wallet');
+    Route::delete('/users/upload/attachement/send-wallet', 'UsersController@deleteAttachment')->name('users.upload.attachment-send-wallet');
 });

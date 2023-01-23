@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\PermissionGroup;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -36,6 +35,7 @@ class PermissionGroupSeeder extends Seeder
                 'income view',
                 'income delete',
                 'income show',
+                'foundation finance',
             ],
         ];
 
@@ -43,7 +43,7 @@ class PermissionGroupSeeder extends Seeder
         foreach ($names as $key => $n) {
             $group = PermissionGroup::insertGetId(['name' => $key, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
             if (count($n) > 0) {
-                foreach($n as $p) {
+                foreach ($n as $p) {
                     $f = Permission::where('name', $p)->first();
                     if ($f != null) {
                         $f->delete();
@@ -55,7 +55,5 @@ class PermissionGroupSeeder extends Seeder
                 }
             }
         }
-
-
     }
 }

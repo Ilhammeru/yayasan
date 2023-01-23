@@ -31,7 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('income_media', function(Blueprint $table) {
+        Schema::table('income_media', function (Blueprint $table) {
             $table->dropForeign(['income_id']);
         });
         Schema::dropIfExists('income_media');

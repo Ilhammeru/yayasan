@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class IncomePayment extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'income_id',
         'amount',
         'account_id',
         'proof_payment',
-        'payment_time'
+        'payment_time',
     ];
 
     public function media()

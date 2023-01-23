@@ -5,14 +5,15 @@ namespace App\Http\Services;
 use App\Models\PermissionGroup;
 use Spatie\Permission\Models\Permission;
 
-class PermissionService {
+class PermissionService
+{
     public function get_permission_group($role = null)
     {
         $permissions = Permission::all();
         $groups = PermissionGroup::all();
 
-        $permissions = collect($permissions)->map(function($item) use ($groups, $role) {
-            foreach($groups as $g) {
+        $permissions = collect($permissions)->map(function ($item) use ($groups, $role) {
+            foreach ($groups as $g) {
                 if ($item['permission_group_id'] == $g->id) {
                     $item['group'] = $g->name;
                 }

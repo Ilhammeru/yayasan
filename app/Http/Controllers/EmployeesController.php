@@ -33,43 +33,46 @@ class EmployeesController extends Controller
         breadcrumb([
             [
                 'name' => __('view.employees'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.index');
+
+        return view($this->vp.'.index');
     }
 
     public function ajax()
     {
         $data = Employees::all();
+
         return DataTables::of($data)
-            ->editColumn('name', function($d) {
-                return '<a href="'. route('employees.show', $d->id) .'">'. ucfirst($d->name) .'</a>';
+            ->editColumn('name', function ($d) {
+                return '<a href="'.route('employees.show', $d->id).'">'.ucfirst($d->name).'</a>';
             })
-            ->editColumn('status', function($d) {
+            ->editColumn('status', function ($d) {
                 $class = 'warning';
                 $text = 'Inactive';
                 if ($d->status == 1) {
                     $class = 'primary';
                     $text = 'Active';
                 }
-                return '<span class="label label-'. $class .'">'. $text .'</span>';
+
+                return '<span class="label label-'.$class.'">'.$text.'</span>';
             })
-            ->editColumn('position_id', function($d) {
+            ->editColumn('position_id', function ($d) {
                 return $d->position ? $d->position->name : '-';
             })
-            ->editColumn('institution_id', function($d) {
+            ->editColumn('institution_id', function ($d) {
                 return $d->institution ? $d->institution->name : '';
             })
-            ->addColumn('action', function($d) {
+            ->addColumn('action', function ($d) {
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_employee') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_employee').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
@@ -87,38 +90,41 @@ class EmployeesController extends Controller
         $institutions = Intitution::active()->get();
         $positions = Position::all();
         $provinces = \Indonesia::allProvinces();
-        $view = view($this->vp . '.form', compact('institutions', 'positions', 'provinces', 'institutions'))->render();
+        $view = view($this->vp.'.form', compact('institutions', 'positions', 'provinces', 'institutions'))->render();
+
         return response()->json([
             'message' => 'Success',
             'view' => $view,
             'method' => 'POST',
-            'url' => '/employees'
+            'url' => '/employees',
         ]);
     }
 
     /**
      * Function to get city based on province_id
+     *
      * @param int province_id
-     * 
      * @return JsonResponse
      */
     public function getCity(Request $request)
     {
         $id = $request->province_id;
         $cities = \Indonesia::findProvince($id, ['cities']);
+
         return response()->json(['message' => 'Success', 'data' => $cities->cities]);
     }
 
     /**
      * Function to get city based on province_id
+     *
      * @param int province_id
-     * 
      * @return JsonResponse
      */
     public function getDistrict(Request $request)
     {
         $id = $request->city_id;
         $districts = \Indonesia::findCity($id, ['districts']);
+
         return response()->json(['message' => 'Success', 'data' => $districts->districts]);
     }
 
@@ -135,7 +141,7 @@ class EmployeesController extends Controller
             $position = $request->position_id;
             $role_id = Position::getRole($position);
             $role_id = $role_id->role_id;
-            
+
             $user_registered = false;
             if ($request->username && $request->password) {
                 $user = new User();
@@ -173,10 +179,12 @@ class EmployeesController extends Controller
             }
 
             DB::commit();
+
             return response()->json(['message' => 'Success create employee']);
         } catch (\Throwable $th) {
             DB::rollBack();
             setup_log('save employee', $th);
+
             return response()->json(['message' => 'Failed to save employee'], 500);
         }
     }
@@ -193,15 +201,17 @@ class EmployeesController extends Controller
             $institutions = Intitution::active()->get();
             $positions = Position::all();
             $provinces = \Indonesia::allProvinces();
-            $view = view($this->vp . '.show', compact('institutions', 'positions', 'provinces', 'institutions', 'employees'))->render();
+            $view = view($this->vp.'.show', compact('institutions', 'positions', 'provinces', 'institutions', 'employees'))->render();
+
             return response()->json([
                 'message' => 'Success',
                 'view' => $view,
                 'method' => 'POST',
-                'url' => '/employees'
+                'url' => '/employees',
             ]);
         } catch (\Throwable $th) {
             setup_log('error show emp', $th);
+
             return response()->json(['message' => 'Failed to show employee'], 500);
         }
     }
@@ -219,15 +229,17 @@ class EmployeesController extends Controller
             $institutions = Intitution::active()->get();
             $positions = Position::all();
             $provinces = \Indonesia::allProvinces();
-            $view = view($this->vp . '.form', compact('institutions', 'positions', 'provinces', 'institutions', 'employee'))->render();
+            $view = view($this->vp.'.form', compact('institutions', 'positions', 'provinces', 'institutions', 'employee'))->render();
+
             return response()->json([
                 'message' => 'Success',
                 'view' => $view,
                 'method' => 'PUT',
-                'url' => '/employees/' . $id
+                'url' => '/employees/'.$id,
             ]);
         } catch (\Throwable $th) {
             setup_log('error edit emp', $th->getMessage());
+
             return response()->json(['message' => 'Failed to show edit employee'], 500);
         }
     }
@@ -246,7 +258,7 @@ class EmployeesController extends Controller
             $position = $request->position_id;
             $role_id = Position::getRole($position);
             $role_id = $role_id->role_id;
-            
+
             $user_registered = false;
             if ($request->username) {
                 $user = $employee->user;
@@ -282,10 +294,12 @@ class EmployeesController extends Controller
             }
 
             DB::commit();
+
             return response()->json(['message' => 'Success update employee']);
         } catch (\Throwable $th) {
             DB::rollBack();
             setup_log('update employee', $th);
+
             return response()->json(['message' => 'Failed to update employee'], 500);
         }
     }
@@ -316,10 +330,12 @@ class EmployeesController extends Controller
             $user->removeRole($role);
 
             DB::commit();
+
             return response()->json(['message' => 'Success delete employee']);
         } catch (\Throwable $th) {
             DB::rollBack();
             setup_log('delete employee', $th);
+
             return response()->json(['message' => 'Failed delete employee']);
         }
     }

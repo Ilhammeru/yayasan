@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Income;
+use App\Models\IncomeMethod;
 use App\Models\IncomeType;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -16,6 +17,7 @@ class IncomeTypeController extends Controller
     {
         $this->vp = 'master.income';
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,14 +28,15 @@ class IncomeTypeController extends Controller
         breadcrumb([
             [
                 'name' => __('view.income_type'),
-                'active' => false
+                'active' => false,
             ],
             [
                 'name' => __('view.list'),
-                'active' => false
+                'active' => false,
             ],
         ]);
-        return view($this->vp . '.type.index');
+
+        return view($this->vp.'.type.index');
     }
 
     public function ajax()
@@ -41,11 +44,11 @@ class IncomeTypeController extends Controller
         $data = IncomeType::all();
 
         return DataTables::of($data)
-            ->addColumn('action', function($d) {
+            ->addColumn('action', function ($d) {
                 return '
                 <div class="btn-group btn-group-xs">
-                    <button type="button" onclick="updateForm('. $d->id .', `'. __('view.update_income_category') .'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteItem('. $d->id .', `'. __('view.delete_text') .'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
+                    <button type="button" onclick="updateForm('.$d->id.', `'.__('view.update_income_category').'`)" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteItem('.$d->id.', `'.__('view.delete_text').'`)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="gi gi-bin"></i></button>
                 </div>
                 ';
             })
@@ -60,7 +63,8 @@ class IncomeTypeController extends Controller
      */
     public function create()
     {
-        $view = view($this->vp . '.type.form')->render();
+        $view = view($this->vp.'.type.form')->render();
+
         return $this->render_response($view, '/income/type/0', 'PUT');
     }
 
@@ -95,8 +99,9 @@ class IncomeTypeController extends Controller
     public function edit($id)
     {
         $data = IncomeType::find($id);
-        $view = view($this->vp . '.type.form', compact('data'))->render();
-        return $this->render_response($view, '/income/type/' . $id, 'PUT');
+        $view = view($this->vp.'.type.form', compact('data'))->render();
+
+        return $this->render_response($view, '/income/type/'.$id, 'PUT');
     }
 
     /**
@@ -112,7 +117,7 @@ class IncomeTypeController extends Controller
         if ($id != 0) {
             $rules['name'] = [
                 'required',
-                Rule::unique('income_types')->ignore($id)
+                Rule::unique('income_types')->ignore($id),
             ];
         }
         $request->validate($rules, [
@@ -143,9 +148,10 @@ class IncomeTypeController extends Controller
         if ($check) {
             return $this->error_response(__('view.delete_failed_bcs_relation'));
         }
-        
+
         $data = IncomeType::find($id);
         $data->delete();
+
         return $this->success_response(__('view.success_delete_item'));
     }
 }

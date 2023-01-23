@@ -27,6 +27,17 @@
             <input type="text" placeholder="085123123123" name="phone" oninput="regexNumber(this)" value="{{ $d ? $d->phone : '' }}" class="form-control" id="phone">
         </div>
         <div class="form-group">
+            <label for="gender" class="control-label">@lang('view.gender')</label>
+            <div>
+                <label class="radio-inline" for="male_radio">
+                    <input type="radio" id="male_radio" name="gender" value="L"> @lang('view.male')
+                </label>
+                <label class="radio-inline" for="female-radio">
+                    <input type="radio" id="female-radio" name="gender" value="P"> @lang('view.female')
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
             <label for="institution_id" class="control-label">@lang('view.intitutions')</label>
             <select name="institution_id" onchange="getClasses(this)" id="institution_id" class="form-control">
                 <option value=""></option>

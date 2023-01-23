@@ -23,16 +23,18 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolePermissionSeeder::class,
             PermissionGroupSeeder::class,
-            InstitutionSeeder::class,
-            InternalUserSeeder::class,
             ExpenseCategorySeeder::class,
             ExpenseMethodSeeder::class,
             ExpenseTypeSeeder::class,
             ExpenseMainSeeder::class,
-            IncomeCategorySeeder::class,
-            IncomeTypeSeeder::class,
             IncomeMethodSeeder::class,
+            IncomeTypeSeeder::class,
+            IncomeCategorySeeder::class,
+            InstitutionSeeder::class,
+            InternalUserSeeder::class,
             AccountSeeder::class,
+            PositionSeeder::class,
+            EmployeeSeeder::class,
         ]);
     }
 }

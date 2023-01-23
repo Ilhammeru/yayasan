@@ -20,6 +20,9 @@
 					<small>Item</small>
 				</th>
 				<th class="th-desc">
+					<small>{{ __('view.month') }}</small>
+				</th>
+				<th class="th-desc">
 					<small>{{ __('view.description') }}</small>
 				</th>
 				<th class="th-price">
@@ -30,21 +33,31 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="tr-item" id="tr-item-0">
+			<tr class="tr-item" id="tr-item-0" data-key="0">
 				<td>
-					<select class="form-control income_category_id" id="income_category_id_0" name="items[0][income_category_id]" data-placeholder="{{ __('view.search_income_category') }}">
+					<select class="form-control income_category_id select-chosen" {{ $is_enable ? '' : 'readonly' }} id="income_category_id_0" name="items[0][income_category_id]" data-placeholder="{{ __('view.search_income_category') }}">
 						@foreach ($incomeCategories as $category)
-							<option value="{{ $category->id }}">{{ $category->name }}</option>
+							<option value="{{ $category->id }}" {{ $category->selected ? 'selected' : 'disabled' }}>{{ $category->name }}</option>
 						@endforeach
 					</select>
+				</td>
+				<td>
+					@if ($selected_month)
+						<div class="input-group">
+							<input type="text" readonly class="form-control select-month" name="items[0][month]" id="month" placeholder="{{ __('view.select_month') }}" value="{{ $selected_month }}">
+						</div>
+					@else
+						<input type="text" class="form-control select-date" name="items[0][date]" id="invoice_date_0" placeholder="{{ __('view.select_date') }}">
+					@endif
 				</td>
 				<td>
 					<input class="form-control" type="text" name="items[0][description]" id="description_0" placeholder="{{ __('view.description') }}">
 				</td>
 				<td>
-					<input class="form-control price_item" type="text" name="items[0][price]" id="price_item_0" placeholder="{{ __('view.price') }}" oninput="updateTotal()" value="0" onchange="updateValue(this)">
+					<input class="form-control price_item" type="text" id="price_item_0" autocomplete="off" placeholder="{{ __('view.price') }}" oninput="updateTotal(this)" onchange="updateValue(this)">
+					<input class="form-control price_item_shadow" type="hidden" name="items[0][price]" id="price_item_0_shadow" placeholder="{{ __('view.price') }}" value="0">
 				</td>
-				<td class="td-delete-0 d-none">
+				<td class="td-delete td-delete-0 d-none">
 					<button class="btn btn-danger btn-sm" type="button" onclick="deleteRow(0)"><i class="fa fa-trash"></i></button>
 				</td>
 			</tr>
@@ -54,20 +67,9 @@
 
 <div class="row">
 	<div class="col-md-3">
-		<button class="btn btn-primary" type="button" id="btn-add-rows" onclick="addItem()">{{ __('view.add_item') }}</button>
+		<button class="btn btn-primary" type="button" id="btn-add-rows" onclick="addItem({{ $income_category_id }}, {{ $is_enable }})">{{ __('view.add_item') }}</button>
 	</div>
 </div>
 
 {{-- item footer --}}
 @include('incomes.components.item_footer')
-
-<script>
-	let incomeCategories = $('.income_category_id');
-
-	setTimeout(() => {
-		for (let aa = 0; aa < incomeCategories.length; aa++) {
-		    let catId = incomeCategories[aa].id;
-		    console.log('catId', catId);
-		}
-	}, 500);
-</script>

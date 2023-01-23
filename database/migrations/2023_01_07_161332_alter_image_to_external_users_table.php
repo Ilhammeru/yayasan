@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('external_users', function (Blueprint $table) {
-            $table->after('name', function($table) {
+            $table->after('name', function ($table) {
                 $table->string('image')->nullable();
             });
         });

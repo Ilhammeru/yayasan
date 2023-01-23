@@ -42,7 +42,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('income_types', function(Blueprint $table) {
+        Schema::table('income_types', function (Blueprint $table) {
             $table->dropForeign(['income_type_id', 'income_method_id']);
         });
         Schema::dropIfExists('incomes');

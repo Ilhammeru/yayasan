@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\InternalUser;
-use Database\Factories\InternalUserFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
@@ -21,6 +19,6 @@ class InternalUserSeeder extends Seeder
         InternalUser::truncate();
         Schema::enableForeignKeyConstraints();
 
-        InternalUser::factory(5)->create();
+        InternalUser::factory(35)->create();
     }
 }

@@ -23,26 +23,27 @@ class ExternalUser extends Model
         'district_id',
         'city_id',
         'province_id',
-        'status'
+        'status',
     ];
+
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function type():Attribute
+    public function type(): Attribute
     {
         return Attribute::make(
-            get: fn() => 'external'
+            get: fn () => 'external'
         );
     }
 
     public static function get_user_type()
     {
         return [
-            ['id' => 1,'name' => __('view.public')],
-            ['id' => 2,'name' => __('view.goverment')],
+            ['id' => 1, 'name' => __('view.public')],
+            ['id' => 2, 'name' => __('view.goverment')],
         ];
     }
 
-    protected function userTypeText():Attribute
+    protected function userTypeText(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->user_type == 1 ? __('view.public') : __('view.goverment'),
@@ -54,17 +55,17 @@ class ExternalUser extends Model
         return $query->where('status', 1);
     }
 
-    public function province():BelongsTo
+    public function province(): BelongsTo
     {
         return $this->BelongsTo(Province::class, 'province_id');
     }
 
-    public function city():BelongsTo
+    public function city(): BelongsTo
     {
         return $this->BelongsTo(City::class, 'city_id');
     }
 
-    public function district():BelongsTo
+    public function district(): BelongsTo
     {
         return $this->BelongsTo(District::class, 'district_id');
     }

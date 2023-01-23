@@ -1,3 +1,5 @@
+const { default: tippy } = require("tippy.js");
+
 $('#user').chosen({
     width: '100%'
 });
@@ -10,6 +12,40 @@ $('#income_type_id').chosen({
 $('#income_method_id').chosen({
     width: '100%'
 });
+
+$('#transaction_start_date').daterangepicker({
+    singleDatePicker: true,
+    autoUpdateInput: false,
+    locale: {
+        cancelLabel: 'Clear'
+    }
+});
+
+$('#transaction_start_date').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format('YYYY-MM-DD'));
+});
+
+$('#transaction_start_date').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+});
+
+$('#transaction_end_date').daterangepicker({
+    singleDatePicker: true,
+    autoUpdateInput: false,
+    locale: {
+        cancelLabel: 'Clear'
+    }
+});
+
+$('#transaction_end_date').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format('YYYY-MM-DD'));
+});
+
+$('#transaction_end_date').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+});
+
+let instanceFilter;
 
 function getDetailUser(e) {
     let val = e.value;
@@ -64,7 +100,7 @@ function checkInvoiceNumber(e) {
     })
 }
 
-function addItem() {
+function addItem(incomeCategoryId, isEnable) {
     let table = $('.table-item');
 
     // append new row
@@ -75,11 +111,42 @@ function addItem() {
         url: base_url + '/incomes/build-item-row',
         data: {
             len: len,
+            income_category_id: incomeCategoryId,
+            is_enable: isEnable,
         },
         success: function(res) {
             $('.table-item tbody').append(res.view);
-            $('.td-delete-0').removeClass('d-none');
+            let deleteElem = $('.td-delete');
+            for (let a = 0; a < deleteElem.length; a++) {
+                deleteElem[a].classList.remove('d-none');
+            }
             $('.th-additional').removeClass('d-none');
+
+            // init select2
+            let select2add = $('.select-chosen').select2();
+            select2add.data('select2').$selection.css('height', '54px');
+
+            let d = new Date();
+            let year = d.getFullYear();
+            // init month picker
+            $('.select-month').MonthPicker({
+                StartYear: year,
+                MonthFormat: 'mm-yy',
+                Button: function(options) {
+                    // this refers to the associated input field.
+                    return $(`<span class="input-group-addon" style="display: table-cell !important;"><i class="fa fa-calendar"></i></span>`)
+                        .button({
+                            text: true,
+                            icons: 'i-icon-calculator'
+                        });
+                }
+            });
+            $('.select-date').daterangepicker({
+                singleDatePicker: true,
+                locale: {
+                    format: 'YYYY-MM-DD',
+                }
+            })
         }
     })
 }
@@ -88,30 +155,68 @@ function deleteRow(id) {
     let tr = $('.tr-item');
     $('#tr-item-' + id).remove();
     if (tr.length == 2) {
-        $('.td-delete-0').addClass('d-none');
+        // get latest row attributes
+        let lastElem = $('.tr-item');
+        let lastId = lastElem[0].id;
+        let lastKey = $('#' + lastId).data('key');
+        $('.td-delete-' + lastKey).addClass('d-none');
         $('.th-additional').addClass('d-none');
     }
 }
 
-function updateTotal() {
-    let inputs = $('.price_item');
+function updateTotalBackup(e) {
+    let currentVal = e.value;
+    let currentId = e.id;
+    let inputs = $('.price_item_shadow');
     let val = [];
-    let ids = [];
     for (let a = 0; a < inputs.length; a++) {
         let id = inputs[a].id;
-        ids.push(id);
-        val.push($('#' + id).val());
+        val.push(currentVal);
     }
-    const sum = val.reduce((partialSum, a) => parseInt(partialSum) + parseInt(a), 0);
-    res = numberWithCommas(sum);
+    console.log('val', val);
+    // const sum = val.reduce((partialSum, a) => parseInt(partialSum) + parseInt(a), 0);
+    // res = numberWithCommas(sum);
 
-    $('#amount_total').val(res);
+    // $('#amount_total').val(sum);
+    // $('#amount_total_shadow').val(res);
+    // $('#remaining_bill').val(res);
+}
+
+function updateTotal(e) {
+    let selfValue = e.value;
+    selfValue = selfValue.replaceAll(',','');
+    if (selfValue == '') {
+        selfValue = 0;
+    }
+    let selfId = e.id;
+    // set shadow value
+    $('#' + selfId + '_shadow').val(selfValue);
+    
+    let val = [];
+    let inputs = $('.price_item_shadow');
+    for (let a = 0; a < inputs.length; a++) {
+        let arrayVal = inputs[a].value;
+        val.push(arrayVal);
+    }
+    // sum all value
+    let sum = val.reduce((partialSum, a) => parseInt(partialSum) + parseInt(a), 0);
+    
+    // manipulate views
+    let res = numberWithCommas(sum);
+    $('#amount_total').val(sum);
+    $('#amount_total_shadow').val(res);
     $('#remaining_bill').val(res);
 }
 
 function updateValue(e) {
     let val = e.value;
-    e.value = parseInt(val);
+    val = val.replaceAll(',','');
+    let id = e.id;
+    if (val == '') {
+        val = 0;
+    }
+    e.value = numberWithCommas(val);
+    $('#' + id + '_shadow').val(val);
 }
 
 function saveItem() {
@@ -228,6 +333,311 @@ function openProofofPayment(incomePaymentId) {
     })
 }
 
+function detailInvoiceMonthly(
+    institutionId,
+    classId,
+    levelId,
+    userId,
+    month,
+    incomeCategoryId,
+    incomeTypeId,
+    incomeCategoryName,
+) {
+    let payload = {
+        institution_id: institutionId,
+        class_id: classId,
+        level_id: levelId,
+        user_id: userId,
+        month: month,
+        income_category_id: incomeCategoryId,
+        income_type_id: incomeTypeId,
+        user_type: 1,
+    };
+
+    openModalInvoice(
+        base_url + '/incomes/invoice/monthly/form',
+        payload,
+        'payInvoiceMonthly()',
+        true,
+        i18n.view.invoice + ' ' + incomeCategoryName,
+    );
+}
+
+function detailPaidInvoice(paymentId) {
+    openModalInvoice(
+        base_url + `/incomes/${paymentId}`,
+        null,
+        `printPaidInvoice(${paymentId})`,
+        true,
+        i18n.view.detail_invoice,
+        null,
+        i18n.view.print,
+    );
+}
+
+function printPaidInvoice(paymentId) {
+    window.open(
+        base_url + '/incomes/' + paymentId + '?print=true',
+        '_blank'
+    );
+}
+
+function createInvoiceNonPeriod(
+    institutionId,
+    classId,
+    levelId,
+    incomeCategoryId,
+    incomeTypeId,
+    incomeCategoryName,
+) {
+    let payload = {
+        institution_id: institutionId,
+        class_id: classId,
+        level_id: levelId,
+        income_category_id: incomeCategoryId,
+        income_type_id: incomeTypeId,
+    };
+    openModalInvoice(
+        base_url + '/incomes/invoice-non-period',
+        payload,
+        'saveInvoiceNonPeriod()',
+        i18n.view.create_invoice,
+    );
+}
+
+function openModalInvoice(
+    urlToGenerateBody,
+    payloadToGenerateBody = null,
+    actionSave = null,
+    fullscreen = false,
+    modalTitle = 'Title',
+    closeText = i18n.view.close,
+    saveText = i18n.view.save,
+) {
+    $('#invoice-modal').modal('show');
+
+    if (!closeText) {
+        closeText = i18n.view.close;
+    }
+
+    /**
+     * Set size of modal
+     */
+    if (fullscreen) {
+        $('#invoice-modal .modal-dialog').addClass('fullscreen');
+    } else {
+        $('#invoice-modal .modal-dialog').removeClass('fullscreen');
+    }
+
+    /**
+     * Set header attributes
+     */
+    $('#invoice-modal .modal-title').text(modalTitle);
+
+    /**
+     * Set modal body
+     * For the first time, insert loading animation while waiting response from backend
+     */
+    $('#invoice-modal .modal-body').html(`
+        <div class="text-center">
+            <i class="fa fa-spinner fa-3x fa-spin"></i>
+        </div>
+    `).css({
+        'display': 'flex',
+        'alignItems': 'center',
+        'justifyContent': 'center',
+    });
+
+    let method = 'GET';
+    if (payloadToGenerateBody) {
+        method = "POST";
+    }
+    
+    $.ajax({
+        type: method,
+        url: urlToGenerateBody,
+        data: payloadToGenerateBody,
+        success: function(res) {
+            $('#invoice-modal .modal-body').html(res.view)
+                .css({
+                    'display': 'block',
+                });
+            
+            /**
+             * Manipulate modal footer
+             */
+            $('#invoice-modal .modal-footer').removeClass('d-none');
+            
+            if (actionSave) {
+                $('#invoice-modal .btn-save').attr('onclick', `${actionSave}`);
+            }
+
+            let d = new Date();
+            let year = d.getFullYear();
+            /**
+             * Init select2 in select option
+             */
+            $('.select-chosen').select2({
+                disabled: false,
+                dropdownParent: '#invoice-modal'
+            });
+            $('.select-month').MonthPicker({
+                StartYear: year,
+                MonthFormat: 'mm-yy',
+                Button: function(options) {
+                    // this refers to the associated input field.
+                    return $(`<span class="input-group-addon" style="display: table-cell !important;"><i class="fa fa-calendar"></i></span>`)
+                        .button({
+                            text: true,
+                            icons: 'i-icon-calculator'
+                        });
+                }
+            });
+            $('.select-date').daterangepicker({
+                singleDatePicker: true,
+                locale: {
+                    format: 'YYYY-MM-DD',
+                }
+            })
+        }
+    });
+
+    /**
+     * Set footer attributes
+     */
+    $('#invoice-modal .btn-close').text(closeText);
+    $('#invoice-modal .btn-save').text(saveText);
+}
+
+function payInvoiceMonthly() {
+    let form = $('#form-payment');
+    let data = new FormData($('#form-payment')[0]);
+    // let ckEditor = CKEDITOR.instances.ckeditor_message.getData();
+    // data.append('message', ckEditor);
+    $.ajax({
+        type: "POST",
+        url: base_url + '/incomes/pay',
+        data: data,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+            loadingPage(true, i18n.view.saving);
+        },
+        success: function(res) {
+            loadingPage(false);
+            console.log('res', res);
+            $('.main-content-incomes').html(res.data.view);
+            closeModal('invoice-modal');
+            showNotif(false, res.message);
+            updateUserSaldo();
+        },
+        error: function(err) {
+            console.log('err', err);
+            showNotif(true, err);
+            loadingPage(false);
+        }
+    });
+}
+
+function saveInvoiceNonPeriod() {
+    let form = $('#form-payment');
+    let data = new FormData($('#form-payment')[0]);
+    // let ckEditor = CKEDITOR.instances.ckeditor_message.getData();
+    // data.append('message', ckEditor);
+    $.ajax({
+        type: "POST",
+        url: base_url + '/incomes/pay-non-period',
+        data: data,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+            loadingPage(true, i18n.view.saving);
+        },
+        success: function(res) {
+            loadingPage(false);
+            console.log('res', res);
+            $('.main-content-incomes').html(res.data.view);
+            closeModal('invoice-modal');
+            showNotif(false, res.message);
+            updateUserSaldo();
+        },
+        error: function(err) {
+            console.log('err', err);
+            showNotif(true, err);
+            loadingPage(false);
+        }
+    })
+}
+
+function changeIncomeByLevel(
+    levelId,
+    classId,
+    institutionId,
+    incomeCategoryId,
+    incomeTypeId,
+    incomeTypePeriod,
+    incomeCategoryName
+) {
+    let payload = {
+        level_id: levelId,
+        class_id: classId,
+        institution_id : institutionId,
+        income_category_id: incomeCategoryId,
+        income_type_id: incomeTypeId,
+        income_category_name: incomeCategoryName,
+        income_type_period: incomeTypePeriod,
+    };
+    $.ajax({
+        type: "POST",
+        url: base_url + '/incomes/change/monthly-income/by-level',
+        data: payload,
+        beforeSend: function() {
+            loadingPage(true, i18n.view.generate_data);
+        },
+        success: function(res) {
+            loadingPage(false);
+            $('.main-content-incomes').html(res.view);
+        },
+        error: function(err) {
+            console.log('err', err);
+            showNotif(true, err);
+            loadingPage(false);
+        }
+    })
+}
+
+function previewImage(path) {
+    $('#preview-modal-image').modal('show');
+    $('#preview-modal-image .modal-body').html(`
+        <img src="${path}" style="width: 100%; height: auto;" />
+    `).css({
+        'display': 'flex',
+        'alignItems': 'center',
+        'justifyContent': 'center',
+    });
+}
+
+function filterIncome() {
+    let form = $('#form-filter-income');
+    let data = form.serialize();
+    $.ajax({
+        type: "POST",
+        url: base_url + '/incomes/filter',
+        data: data,
+        beforeSend: function() {
+            loadingPage(true, i18n.view.generate_data);
+        },
+        success: function(res) {
+            loadingPage(false);
+            $('.main-content-incomes').html(res.view);
+        },
+        error: function(err) {
+            loadingPage(false);
+            showNotif(true, err);
+        }
+    })
+}
+
 window.getDetailUser = getDetailUser;
 window.checkInvoiceNumber = checkInvoiceNumber;
 window.addItem = addItem;
@@ -241,3 +651,13 @@ window.validatePaymentAmount = validatePaymentAmount;
 window.normalizeValue = normalizeValue;
 window.changeToThousand = changeToThousand;
 window.openProofofPayment = openProofofPayment;
+window.detailInvoiceMonthly = detailInvoiceMonthly;
+window.openModalInvoice = openModalInvoice;
+window.payInvoiceMonthly = payInvoiceMonthly;
+window.saveInvoiceNonPeriod = saveInvoiceNonPeriod;
+window.changeIncomeByLevel = changeIncomeByLevel;
+window.detailPaidInvoice = detailPaidInvoice;
+window.printPaidInvoice = printPaidInvoice;
+window.previewImage = previewImage;
+window.filterIncome = filterIncome;
+window.createInvoiceNonPeriod = createInvoiceNonPeriod;
