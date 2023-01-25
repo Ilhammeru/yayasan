@@ -25,6 +25,9 @@ class User extends Authenticatable
         'role',
         'password',
         'user_type',
+        'homeroom_institution_id',
+        'homeroom_class_id',
+        'homeroom_level_id',
     ];
 
     /**

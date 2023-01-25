@@ -36,7 +36,8 @@ class RolePermissionSeeder extends Seeder
             'tu',
             'wali kelas',
             'guru',
-            'bendahara yayasan'
+            'bendahara yayasan',
+            'kepala yayasan',
         ];
         foreach ($alls as $all) {
             Role::create(['name' => $all]);

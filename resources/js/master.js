@@ -55,22 +55,36 @@ function openGlobalModal(
         data: payloadToGenerateBody,
         beforeSend: function() {
             $('.select-chosen').select2('destroy');
+            $('#global-modal .modal-footer').addClass('d-none');
         },
         success: function(res) {
+            
+            $('#global-modal .modal-body').html(res.view)
+            .css({
+                'display': 'block',
+            });
+            
             /**
              * Init chosen in select option
              */
             $('.select-chosen').select2();
-
-            $('#global-modal .modal-body').html(res.view)
-                .css({
-                    'display': 'block',
-                });
+            $('.select-date').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                timePicker24Hour: true,
+                timePickerIncrement: 5,
+                locale: {
+                    format: 'YYYY-MM-DD HH:mm',
+                }
+            })
 
             $('#global-modal .modal-footer').removeClass('d-none');
             
+            $('#global-modal .btn-save').attr('onclick', `${actionSave}`)
+                .addClass('d-none');
             if (actionSave) {
-                $('#global-modal .btn-save').attr('onclick', `${actionSave}`);
+                $('#global-modal .btn-save').attr('onclick', `${actionSave}`)
+                    .removeClass('d-none');
             }
 
         }
@@ -330,13 +344,29 @@ function reloadWalletDetail(incomeCategoryId) {
     param = {
         income_category_id: incomeCategoryId,
     };
-    columns = [
-        {data: 'checkbox', name: 'checkbox', className: 'text-center', sortable: false,},
-        {data: 'invoice_number', name: 'invoice_number'},
-        {data: 'user', name: 'user'},
-        {data: 'amount', name: 'amount'},
-        // {data: 'action', name: 'action', className: 'text-center', orderable: false},
-    ];
+    if (incomeCategoryId != 0) {
+        columns = [
+            {data: 'checkbox', name: 'checkbox', className: 'text-center', sortable: false,},
+            {data: 'invoice_number', name: 'invoice_number'},
+            {data: 'user', name: 'user'},
+            {data: 'amount', name: 'amount'},
+            // {data: 'action', name: 'action', className: 'text-center', orderable: false},
+        ];
+    } else {
+        columns = [
+            {data: 'id',
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                width: '5%',
+                className: 'text-center'
+            },
+            {data: 'proposal', name: 'proposal'},
+            {data: 'budget', name: 'budget'},
+            {data: 'approved_at', name: 'approved_at'},
+            {data: 'approved_budget', name: 'approved_budget'},
+        ];
+    }
     createDataTables(
         'table-wallet',
         columns,

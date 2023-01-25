@@ -29,6 +29,31 @@ class AccountService {
         $model->save();
 
         // save attachments
+        $this->store_attachments($docs, $model->id);
+    }
+
+    public function deductAccount(
+        $account_id,
+        $amount,
+        $message,
+        $docs,
+    )
+    {
+        $model = new AccountTransaction();
+        $model->status = AccountTransaction::SUCCESS;
+        $model->account_id = $account_id;
+        $model->credit = str_replace(',','',$amount);
+        $model->description = $message;
+        $model->source_id = 0;
+        $model->save();
+
+        // save attachments
+        // save attachments
+        $this->store_attachments($docs, $model->id);
+    }
+
+    public function store_attachments($docs, $transaction_id)
+    {
         for ($b = 0; $b < count($docs); $b++) {
             $exp = explode('@@', $docs[$b]);
             $folder = str_replace(' ', '', $exp[0]);
@@ -43,7 +68,7 @@ class AccountService {
 
             $path = 'account_transaction/'.$exp[1];
             $model_media = new AccountTransactionDocs();
-            $model_media->account_transaction_id = $model->id;
+            $model_media->account_transaction_id = $transaction_id;
             $model_media->path = $path;
             $model_media->save();
         }

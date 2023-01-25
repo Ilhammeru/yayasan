@@ -9,7 +9,7 @@
 
 <div class="form-group mb-3">
     <label for="name" class="control-label">{{ __('view.name') }}</label>
-    <input type="text" name="name" value="{{ $d ? ucfirst($d->name) : '' }}" placeholder="Master Employee" class="form-control" id="name">
+    <input type="text" {{ $d ? 'readonly' : '' }} name="name" value="{{ $d ? ucfirst($d->name) : '' }}" placeholder="Master Employee" class="form-control" id="name">
 </div>
 <div class="form-group mb-3">
     <label for="group" class="control-label">{{ __('view.permission_group') }}</label>

@@ -25,6 +25,7 @@ class PositionSeeder extends Seeder
         $role_kepala = Role::findByName('kepala sekolah');
         $role_wakil = Role::findByName('wakil kepala');
         $role_bendahara = Role::findByName('bendahara yayasan');
+        $role_kepala_yayasan = Role::findByName('kepala yayasan');
 
         Position::insert([
             ['name' => 'Kepala Sekolah', 'role_id' => $role_kepala->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
@@ -33,6 +34,7 @@ class PositionSeeder extends Seeder
             ['name' => 'Wali Kelas', 'role_id' => $role_wali_kelas->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Guru', 'role_id' => $role_guru->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['name' => 'Bendahara Yayasan', 'role_id' => $role_bendahara->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['name' => 'Kepala Yayasan', 'role_id' => $role_kepala_yayasan->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
     }
 }

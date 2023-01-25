@@ -35,11 +35,22 @@ class PermissionGroupSeeder extends Seeder
                 'income view',
                 'income delete',
                 'income show',
+                'income list',
                 'foundation finance',
+            ],
+            'proposal' => [
+                'approve proposal',
+                'reject proposal',
+                'cash out proposal budget',
+                'create proposal',
+                'edit proposal',
+                'list proposal',
+                'detail proposal',
             ],
         ];
 
         $role = Role::findByName('kepala sekolah');
+        $role1 = Role::findByName('kepala yayasan');
         foreach ($names as $key => $n) {
             $group = PermissionGroup::insertGetId(['name' => $key, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
             if (count($n) > 0) {
@@ -51,6 +62,7 @@ class PermissionGroupSeeder extends Seeder
                     $create = Permission::create(['name' => $p, 'permission_group_id' => $group]);
                     if ($role) {
                         $role->givePermissionTo($create);
+                        $role1->givePermissionTo($create);
                     }
                 }
             }

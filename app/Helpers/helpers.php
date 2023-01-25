@@ -251,3 +251,82 @@ if (!function_exists('get_user_saldo')) {
         return $saldo;
     }
 }
+
+/**
+ * Function to get the details of my leading class if any
+ */
+if (!function_exists('my_homeroom')) {
+    function my_homeroom($id = 0)
+    {
+        $data = Redis::get('user_homeroom_data');
+        $data = json_decode($data, true);
+        if (!$data) {
+            if ($id == 0) {
+                $employee = Employees::select('id')->where('user_id', auth()->id())->first();
+            } else {
+                $employee = Employees::select('id')->find($id);
+            }
+            $homeroom = $employee->homeroomTeacher;
+            if ($homeroom) {
+                $data = [
+                    'institution_id' => $homeroom->class->institution->id,
+                    'institution_name' => $homeroom->class->institution->name,
+                    'class_id' => $homeroom->class->id,
+                    'class_name' => $homeroom->class->name,
+                    'level_id' => $homeroom->id,
+                    'level_name' => $homeroom->name,
+                ];
+
+                Redis::set('user_homeroom_data', json_encode($data));
+            }
+    
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('am_i_homeroom_another_class')) {
+    function am_i_homeroom_another_class($id, $institution_detail)
+    {
+        $my_homeroom = my_homeroom($id);
+        $res = false;
+        $current_homeroom = null;
+        if ($my_homeroom) {
+            if (
+                $institution_detail['institution_id'] != $my_homeroom['institution_id'] ||
+                $institution_detail['class_id'] != $my_homeroom['class_id'] ||
+                $institution_detail['level_id'] != $my_homeroom['level_id']
+            ) {
+                $res = true;
+                $current_homeroom = $my_homeroom['class_name'] . $my_homeroom['level_name'];
+            }
+        }
+
+        return [
+            'status' => $res,
+            'current_homeroom' => $current_homeroom,
+        ];
+    }
+}
+
+if (!function_exists('my_institution')) {
+    function my_institution()
+    {
+        $user_id = auth()->id();
+        $data = Redis::get('my_institution');
+        $data = json_decode($data, true);
+        if (!$data) {
+            $employee = Employees::select('institution_id')
+                ->where('user_id', $user_id)
+                ->first();
+            $institution = $employee->institution;
+            $data = [
+                'id' => $institution->id,
+                'name' => $institution->name
+            ];
+            Redis::set('my_institution', json_encode($data));
+        }
+
+        return $data;
+    }
+}

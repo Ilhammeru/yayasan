@@ -27,21 +27,29 @@ class WalletService {
         $income_category_id,
         $source_id,
         $model_class,
+        $proposal_id = null,
     )
     {
         // get income category name
-        $income_category = IncomeCategory::select('name')
-            ->find($income_category_id);
-        $income_category_name = $income_category->name;
-        $text = __('view.received_money_from', ['name' => $income_category_name]);
+        if ($income_category_id == 0) {
+            $text = 'Pencairan dana proposal';
+        } else {
+            $income_category = IncomeCategory::select('name')
+                ->find($income_category_id);
+            $income_category_name = $income_category->name;
+            $text = __('view.received_money_from', ['name' => $income_category_name]);
+        }
 
         $model = new Wallets();
         $model->model = $model_class;
         $model->user_id = $user_id;
-        $model->debit = $amount;
+        $model->debit = str_replace(',','',$amount);
         $model->source_id = $source_id;
         $model->source_text = $text;
         $model->income_category_id = $income_category_id;
+        if ($proposal_id) {
+            $model->proposal_id = $proposal_id;
+        }
         $model->save();
 
         return $model;
@@ -272,19 +280,28 @@ class WalletService {
 
         $data = [];
         foreach ($groups as $key => $group) {
-            $category = IncomeCategory::select('id', 'name')
-                ->find($key);
             $debits = collect($group)->pluck('debit')->sum();
             $credits = collect($group)
                 ->where('is_out', 0)
                 ->pluck('credit')->sum();
             $total = $debits - $credits;
-            $data[$category->name] = [
-                'id' => $key,
-                'amount' => 'Rp. ' . number_format($total, 0, '.', '.'),
-                'col' => $col,
-                'income_category_id' => $key,
-            ];
+            if ($key != 0) {
+                $category = IncomeCategory::select('id', 'name')
+                    ->find($key);
+                $data[$category->name] = [
+                    'id' => $key,
+                    'amount' => 'Rp. ' . number_format($total, 0, '.', '.'),
+                    'col' => $col,
+                    'income_category_id' => $key,
+                ];
+            } else {
+                $data['Proposal'] = [
+                    'id' => $key,
+                    'amount' => 'Rp. ' . number_format($total, 0, '.', '.'),
+                    'col' => $col,
+                    'income_category_id' => $key,
+                ];
+            }
         }
 
         return $data;
@@ -344,5 +361,36 @@ class WalletService {
         $total = $debit - $credit;
 
         return $total;
+    }
+
+    /**
+     * Function to render table header of proposal data
+     * 
+     * @return array
+     */
+    public function proposalHeader()
+    {
+        return [
+            '#',
+            __('view.proposal'),
+            __('view.request_budget'),
+            __('view.approved_at'),
+            __('view.approved_budget'),
+        ];
+    }
+
+     /**
+     * Function to render table header of wallet transction data
+     * 
+     * @return array
+     */
+    public function walletTransactionHeader()
+    {
+        return [
+            'checkbox',
+            __('view.invoice'),
+            __('view.user'),
+            __('view.amount'),
+        ];
     }
 }

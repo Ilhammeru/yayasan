@@ -19,6 +19,7 @@ class Wallets extends Model
         'income_category_id',
         'is_out',
         'out',
+        'proposal_id',
     ];
 
     public function incomeCategory(): BelongsTo
@@ -50,5 +51,15 @@ class Wallets extends Model
         $self_id = $self_data->id;
 
         return $query->where('user_id', $self_id);
+    }
+
+    public function proposal()
+    {
+        $data = null;
+        if ($this->income_category_id == 0) {
+            $data = Proposal::find($this->proposal_id);
+        }
+
+        return $data;
     }
 }

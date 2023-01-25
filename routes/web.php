@@ -4,6 +4,7 @@ namespace yayasan\routes;
 
 use App\Http\Controllers\ProfileController;
 use App\Models\Intitution;
+use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
@@ -161,4 +162,17 @@ Route::middleware('auth')->group(function () use ($institutions) {
     Route::post('/users/wallet/send/global', 'UsersController@sendWallet')->name('users.wallet.send');
     Route::post('/users/upload/attachement/send-wallet', 'UsersController@uploadAttachment')->name('users.upload.attachment-send-wallet');
     Route::delete('/users/upload/attachement/send-wallet', 'UsersController@deleteAttachment')->name('users.upload.attachment-send-wallet');
+
+
+    // begin::proposal
+    Route::post('/proposals/upload-attachments', 'ProposalController@uploadAttachments')->name('proposals.update-attachments');
+    Route::delete('/proposals/upload-attachments', 'ProposalController@deleteAttachments')->name('proposals.update-attachments');
+    Route::get('/proposals/ajax', 'ProposalController@ajax')->name('proposals.ajax');
+    Route::post('/proposals/{id}/update', 'ProposalController@update')->name('proposals.update-form');
+    Route::get('/proposals/download/{document_id}', 'ProposalController@download')->name('proposals.download.document');
+    Route::get('/proposals/approve/{id}', 'ProposalController@approve')->name('proposals.approve');
+    Route::get('/proposals/publish/{id}', 'ProposalController@publish')->name('proposals.publish');
+    Route::post('/proposals/funding/{id}', 'ProposalController@funding')->name('proposals.funding');
+    Route::resource('proposals', 'ProposalController');
+    // end::proposal
 });

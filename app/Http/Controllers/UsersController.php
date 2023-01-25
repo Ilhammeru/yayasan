@@ -16,6 +16,7 @@ use App\Models\Wallets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 
 class UsersController extends Controller
@@ -424,20 +425,89 @@ class UsersController extends Controller
             $keys = array_keys($data);
             $key_1 = $keys[0];
             $param_category_id = $data[$key_1]['income_category_id'];
+
+            /**
+             * Set table header based on category
+             * If param_category_id is 0, render proposal header
+             * If not, render wallet header
+             */
+            if ($param_category_id == 0) {
+                $headers = $this->wallet->proposalHeader();
+            } else {
+                $headers = $this->wallet->walletTransactionHeader();
+            }
         }
 
-        $view = view($this->vp . '.wallet', compact('data', 'param_category_id'))->render();
+        $view = view($this->vp . '.wallet', compact('data', 'param_category_id', 'headers'))->render();
 
         return $this->render_response($view);
     }
 
     /**
      * FUnction to render datatable for selected wallet category
-     * @param int wallet_id
+     * @param int income_category_id
+     * 
      */
     public function walletAjax()
     {
         $income_category_id = request()->income_category_id;
+        /**
+         * Render view based on income_category_id
+         * Render proposal data if income_category_id is 0
+         * and render wallet transaction detail if not 0
+         */
+        if ($income_category_id != 0) {
+            $data = $this->ajaxWalletTransaction($income_category_id);
+        } else {
+            $data = $this->ajaxProposalTransaction($income_category_id);
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Function to render proposal transaction
+     * @param int income_category_id
+     * 
+     * @return DataTables
+     */
+    public function ajaxProposalTransaction($income_category_id)
+    {
+        $data = Wallets::where('income_category_id', 0)
+            ->myWallet()
+            ->get();
+        
+        $data = collect($data)->map(function ($item) {
+            $item['proposal'] = $item->proposal();
+
+            return $item;
+        });
+
+        return DataTables::of($data)
+            ->addColumn('proposal', function($d) {
+                return ucfirst($d->proposal->title);
+            })
+            ->addColumn('budget', function($d) {
+                return 'Rp. ' . number_format($d->proposal->budget_total, 0, '.', '.');
+            })
+            ->addColumn('approved_at', function($d) {
+                return generate_indo_date($d->proposal->approve_at);
+            })
+            ->addColumn('approved_budget', function($d) {
+                return 'Rp. ' . number_format($d->proposal->approved_budget, 0, '.', '.');
+            })
+            ->rawColumns(['proposal', 'budget', 'approved_at', 'approved_budget'])
+            ->make(true);
+    }
+
+    /**
+     * Funciton to render wallet transaction datatables
+     * @param int income_category_id
+     * 
+     * @return DataTables
+     */
+    public function ajaxWalletTransaction($income_category_id)
+    {
         $data = $this->wallet->detail_wallet_by_category($income_category_id);
 
         return DataTables::of($data)

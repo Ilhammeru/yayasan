@@ -33,6 +33,7 @@ class EmployeeSeeder extends Seeder
         $role_wali_kelas = Role::findByName('wali kelas');
         $role_treasurer = Role::findByName('Bendahara Yayasan');
         $role_kepala = Role::findByName('kepala sekolah');
+        $role_kepala_yayasan = Role::findByName('kepala yayasan');
 
         // positions
         $pos_treasurer = Position::select('id')->where('name', 'Bendahara Yayasan')->first();
@@ -40,6 +41,7 @@ class EmployeeSeeder extends Seeder
         $pos_tu = Position::select('id')->where('name', 'tu')->first();
         $pos_wali = Position::select('id')->where('name', 'wali kelas')->first();
         $pos_kepala = Position::select('id')->where('name', 'kepala sekolah')->first();
+        $pos_kepala_yayasan = Position::select('id')->where('name', 'kepala yayasan')->first();
 
         // user 1 as TU
         $user_1 = User::insertGetId([
@@ -305,6 +307,36 @@ class EmployeeSeeder extends Seeder
             'account_number' => fake()->numberBetween(1000000,9999999),
             'institution_id' => 1,
             'position_id' => $pos_kepala->id,
+            'status' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        // Kepala yayasan
+        $user_ky = User::insertGetId([
+            'username' => 'kepalayayasan',
+            'password' => Hash::make('admin'),
+            'email' => fake()->email(),
+            'role' => $role_kepala_yayasan->id,
+            'user_type' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        $user_ky_1 = User::find($user_ky);
+        $user_ky_1->assignRole($role_kepala_yayasan);
+        Employees::insert([
+            'name' => fake()->name(),
+            'user_id' => $user_ky,
+            'email' => fake()->email(),
+            'nip' => 99388383822,
+            'phone' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'district_id' => 957,
+            'city_id' => 78,
+            'province_id' => 4,
+            'account_number' => fake()->numberBetween(1000000,9999999),
+            'institution_id' => 1,
+            'position_id' => $pos_kepala_yayasan->id,
             'status' => 1,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

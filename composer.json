@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.7",
         "laravolt/indonesia": "^0.32.0",
         "outhebox/laravel-translations": "^0.0.4",
+        "phpmailer/phpmailer": "^6.7",
         "predis/predis": "^2.0",
         "spatie/laravel-permission": "^5.7",
         "vinkla/hashids": "^10.0",

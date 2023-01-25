@@ -233,7 +233,7 @@ Table wallets {
     updated_at timestamp
 }
 
-Table account_transaction {
+Table account_transactions {
     id int [pk, increment]
     account_id int
     debit double [default: '0']
@@ -247,7 +247,39 @@ Table account_transaction {
 
 Table account_transaction_docs {
     id int [pk, increment]
-    account_transaction_id int
+    account_transaction_id int [ref: > account_transactions.id]
+    path text
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table Proposals {
+    id int [pk, increment]
+    title varchar
+    event_date date
+    event_time time
+    pic int [note: 'Related to InternalUser or Employees table']
+    pic_user_type tinyint [note: '1 for internal, 2 for employee']
+    description text
+    budget_total double [default: '0']
+    approved_budget double [default: '0']
+    status tinyint [note: '1 for approve and budget is provide, 2 for waiting approval, 3 for approved and waiting budget, 4 for reject, 5 for draft']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table Proposal_logs {
+    id int [pk, increment]
+    proposal_id int [ref: > proposals.id]
+    status tinyint [note: '1 for approve and budget is provide, 2 for waiting approval, 3 for approved and waiting budget, 4 for reject, 5 for draft']
+    description varchar
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table proposal_docs {
+    id int [pk, increment]
+    proposal_id int
     path text
     created_at timestamp
     updated_at timestamp

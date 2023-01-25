@@ -53,7 +53,7 @@ class Employees extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function classTeacher(): HasOne
+    public function homeroomTeacher(): HasOne
     {
         return $this->hasOne(InstitutionClassLevel::class, 'homeroom_teacher', 'id');
     }

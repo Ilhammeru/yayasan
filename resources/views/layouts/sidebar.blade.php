@@ -293,6 +293,9 @@
                         $side_institutions = \Illuminate\Support\Facades\Redis::get('institutions');
                         $side_institutions = json_decode($side_institutions, true);
                         $active_sides_ins = generate_active_sidebars($side_institutions);
+
+                        $homeroom_data = my_homeroom();
+                        $my_institution = my_institution();
                     @endphp
                     <li class="{{ active_sidebar_parent($active_sides_ins) }}">
                         {{-- <a href="{{ route('incomes.index') }}" class="{{ active_sidebar_child(['incomes.index', 'incomes.create', 'incomes.show', 'incomes.edit']) }}"><i class="fa fa-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">{{ __('view.income') }}</span></a> --}}
@@ -302,19 +305,53 @@
                             <span class="sidebar-nav-mini-hide">{{ __('view.income') }}</span>
                         </a>
                         @if (count($side_institutions) > 0)
-                        <ul>
-                            @foreach ($side_institutions as $si)
-                                <li>
-                                    <a class="{{ active_sidebar_child(['incomes.index.' . $si['id']]) }}" href="{{ route('incomes.index.' . $si['id']) }}">{{ $si['name'] }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
+                            <ul>
+                                @foreach ($side_institutions as $si)
+                                    @if (auth()->user()->hasRole('wali kelas'))
+                                        <!-- Condition when authenticate user is homeroom -->
+                                        @if ($homeroom_data['institution_id'] == $si['id'])
+                                            <li>
+                                                <a class="{{ active_sidebar_child(['incomes.index.' . $si['id']]) }}" href="{{ route('incomes.index.' . $si['id']) }}">{{ $si['name'] }}</a>
+                                            </li>
+                                        @endif
+                                        <!-- Condition when authenticate user is homeroom -->
+
+                                    @elseif($my_institution['id'] == $si['id'])
+                                        <!-- Condition when authenticate user is from each institution -->
+                                        <li>
+                                            <a class="{{ active_sidebar_child(['incomes.index.' . $si['id']]) }}" href="{{ route('incomes.index.' . $si['id']) }}">{{ $si['name'] }}</a>
+                                        </li>
+                                        <!-- Condition when authenticate user is from each institution -->
+
+                                    @elseif(auth()->user()->hasRole('kepala yayasan') || auth()->user()->hasRole('bendahara yayasan'))
+                                        <!-- Condition when authenticate user is from HQ -->
+                                        <li>
+                                            <a class="{{ active_sidebar_child(['incomes.index.' . $si['id']]) }}" href="{{ route('incomes.index.' . $si['id']) }}">{{ $si['name'] }}</a>
+                                        </li>
+                                        <!-- Condition when authenticate user is from HQ -->
+
+                                    @endif
+                                @endforeach
+                            </ul>
                         @endif
                     </li>
                 @endif
                 <!-- end:income -->
 
-            </ul>
+                <!-- begin::proposal -->
+                @if (auth()->user()->can('list proposal'))
+                    <li class="{{ active_sidebar_parent(['proposals.index']) }}">
+                        <a href="{{ route('proposals.index') }}" class="{{ active_sidebar_child(['proposals.index']) }}">
+                            {{-- <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i> --}}
+                            <i class="fa fa-newspaper-o sidebar-nav-icon"></i>
+                            <span class="sidebar-nav-mini-hide">{{ __('view.proposal') }}</span>
+                        </a>
+                        {{-- <a href="{{ route('dashboard') }}"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a> --}}
+                    </li>
+                @endif
+                <!-- end::proposal -->
+
+            </ul>       
             <!-- END Sidebar Navigation -->
         </div>
         <!-- END Sidebar Content -->

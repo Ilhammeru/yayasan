@@ -38,6 +38,7 @@
 
         {{-- iziToast --}}
         <link rel="stylesheet" href="{{ asset('assets/plugins/izitoast/dist/css/iziToast.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
         <!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
 
@@ -107,7 +108,7 @@
                 height: 35px !important;
             }
 
-            #global-modal .modal-dialog,
+            #global-modal .modal-dialog.fullscreen,
             #invoice-modal .modal-dialog {
                 width: 100vw;
                 max-width: none;
@@ -305,6 +306,8 @@
         <script src="{{ asset('assets/js/app.js') }}"></script>
         <script src="{{ asset('assets/plugins/izitoast/dist/js/iziToast.min.js') }}"></script>
         <script src="{{ asset('assets/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <script src="{{ mix('dist/js/master.js') }}"></script>
         <script src="/js/lang.js"></script>
 

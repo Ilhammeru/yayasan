@@ -6,26 +6,70 @@
     }
 </style>
 
+@php
+    $homeroom_data = my_homeroom();
+@endphp
+
 {{-- filter level and create button --}}
 <div class="table-view-action">
     <div class="group">
         @if (count($levels) > 0)
             @foreach ($levels as $level)
-                <div class="btn-group btn-group-md" style="margin-bottom: 10px;" data-toggle="buttons">
-                    <button class="btn btn-filter-level-income {{ $level->id == $level_id ? 'themed-background-default themed-color-white' : 'btn-default' }}"
-                        id="btn-filter-level-{{ $level->id }}"
-                        onclick="changeIncomeByLevel(
-                            {{ $level->id }},
-                            {{ $class_id }},
-                            {{ $institution_id }},
-                            {{ $income_category }},
-                            {{ $income_type_id }},
-                            {{ $income_type_period }},
-                            `{{ $income_category_name }}`,
-                        )">
-                        {{ $level->name}}
-                    </button>
-                </div>
+                @if (auth()->user()->hasRole('kepala yayasan') || auth()->user()->hasRole('bendahara yayasan'))
+                    <div class="btn-group btn-group-md" data-toggle="buttons">
+                        <button class="btn btn-filter-level-income {{ $level->id == $level_id ? 'themed-background-default themed-color-white' : 'btn-default' }}"
+                            id="btn-filter-level-{{ $level->id }}"
+                            onclick="changeIncomeByLevel(
+                                {{ $level->id }},
+                                {{ $class_id }},
+                                {{ $institution_id }},
+                                {{ $income_category }},
+                                {{ $income_type_id }},
+                                {{ $income_type_period }},
+                                `{{ $income_category_name }}`,
+                            )">
+                            {{ $level->name}}
+                        </button>
+                    </div>
+                @else
+                    @if (auth()->user()->hasRole('wali kelas'))
+                        @if ($homeroom_data)
+                            @if ($level->id == $homeroom_data['level_id'])
+                                <div class="btn-group btn-group-md" data-toggle="buttons">
+                                    <button class="btn btn-filter-level-income {{ $level->id == $level_id ? 'themed-background-default themed-color-white' : 'btn-default' }}"
+                                        id="btn-filter-level-{{ $level->id }}"
+                                        onclick="changeIncomeByLevel(
+                                            {{ $level->id }},
+                                            {{ $class_id }},
+                                            {{ $institution_id }},
+                                            {{ $income_category }},
+                                            {{ $income_type_id }},
+                                            {{ $income_type_period }},
+                                            `{{ $income_category_name }}`,
+                                        )">
+                                        {{ $level->name}}
+                                    </button>
+                                </div>
+                            @endif
+                        @endif
+                    @else
+                        <div class="btn-group btn-group-md" data-toggle="buttons">
+                            <button class="btn btn-filter-level-income {{ $level->id == $level_id ? 'themed-background-default themed-color-white' : 'btn-default' }}"
+                                id="btn-filter-level-{{ $level->id }}"
+                                onclick="changeIncomeByLevel(
+                                    {{ $level->id }},
+                                    {{ $class_id }},
+                                    {{ $institution_id }},
+                                    {{ $income_category }},
+                                    {{ $income_type_id }},
+                                    {{ $income_type_period }},
+                                    `{{ $income_category_name }}`,
+                                )">
+                                {{ $level->name}}
+                            </button>
+                        </div>
+                    @endif
+                @endif
             @endforeach
         @endif
     </div>

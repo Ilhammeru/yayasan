@@ -225,17 +225,17 @@ function saveHomeroom() {
             loadingPage(true, i18n.view.saving);
         },
         success: function(res) {
-            console.log('res',res);
             loadingPage(false);
             showNotif(false, res.message);
             $('#modalChooseHomeroom').modal('hide');
             $('#target-homeroom-teacher').html(`
-                <b>${res.data.homeroom}</b>
-                <a style="cursor: pointer;" onclick="chooseHomeroomTeacher(${res.data.class_id}, ${res.data.level_id}, ${res.data.institution_id})">${i18n.view.change_homeroom} <i class="fa fa-share"></i></a>
+            <b>${res.data.homeroom}</b>
+            <a style="cursor: pointer;" onclick="chooseHomeroomTeacher(${res.data.class_id}, ${res.data.level_id}, ${res.data.institution_id})">${i18n.view.change_homeroom} <i class="fa fa-share"></i></a>
             `);
         },
         error: function(err) {
             showNotif(true, err);
+            loadingPage(false);
         }
     });
 }

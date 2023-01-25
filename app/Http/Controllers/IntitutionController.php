@@ -11,11 +11,13 @@ use App\Models\InstitutionClassLevel;
 use App\Models\InstitutionIncomeCategory;
 use App\Models\InternalUser;
 use App\Models\Intitution;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
 class IntitutionController extends Controller
@@ -275,24 +277,73 @@ class IntitutionController extends Controller
      */
     public function storeHomeroom(Request $request)
     {
-        $id = $request->homeroom;
-        $class_id = $request->class_id;
-        $level_id = $request->level_id;
-        $institution_id = $request->institution_id;
+        DB::beginTransaction();
+        try {
+            $id = $request->homeroom;
+            $class_id = $request->class_id;
+            $level_id = $request->level_id;
+            $institution_id = $request->institution_id;
+    
+            $model = InstitutionClassLevel::find($level_id);
+            /**
+             * Validate selected homeroom
+             * Employee cannot be homeroom in more than 1 class
+             */
+            $validate = am_i_homeroom_another_class($id, ['institution_id' => $institution_id, 'class_id' => $class_id, 'level_id' => $level_id]);
+            if (
+                $validate['status']
+            ) {
+                DB::rollBack();
 
-        $model = InstitutionClassLevel::find($level_id);
-        $model->homeroom_teacher = $id;
-        $model->save();
-        $homeroom = $model->homeroomTeacher->name;
-        return $this->success_response(
-            __('view.homeroom_teacher_stored'),
-            [
-                'homeroom' => $homeroom,
-                'class_id' => $class_id,
-                'level_id' => $level_id,
-                'institution_id' => $institution_id,
-            ]
-        );
+                return $this->error_response(
+                    __('view.double_homeroom_validation',
+                    ['name' => $validate['current_homeroom']])
+                );
+            }
+            $model->homeroom_teacher = $id;
+            $model->save();
+            $homeroom = $model->homeroomTeacher->name;
+    
+            /**
+             * Assign wali kelas role
+             * and update user homeroom data
+             */
+            $user_id = $model->homeroomTeacher->user_id;
+            $user = User::find($user_id);
+            $wali_kelas_role = Role::findByName('wali kelas');
+            $user->assignRole($wali_kelas_role);
+            
+            $user->homeroom_institution_id = $institution_id;
+            $user->homeroom_class_id = $class_id;
+            $user->homeroom_level_id = $level_id;
+            $user->save();
+
+            /**
+             * Update REDIS data
+             */
+            $my_homeroom = my_homeroom($id);
+            Redis::set('user_homeroom_data', json_encode($my_homeroom));
+            DB::commit();
+    
+            return $this->success_response(
+                __('view.homeroom_teacher_stored'),
+                [
+                    'homeroom' => $homeroom,
+                    'class_id' => $class_id,
+                    'level_id' => $level_id,
+                    'institution_id' => $institution_id,
+                ]
+            );
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            setup_log('error store homeroom', [
+                'file' => $th->getFile(),
+                'message' => $th->getMessage(),
+                'line' => $th->getLine()
+            ]);
+            
+            return $this->error_response($th->getMessage());
+        }
     }
 
     public function showHomeroomTeacher(Request $request)

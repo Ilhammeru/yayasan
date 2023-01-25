@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ asset('assets/plugins/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.min.css') }}"> 
 
-@if ($param_category_id != 0)
+{{-- @if ($param_category_id != 0) --}}
     <div class="row" id="wallet-tab-active">
         @foreach ($data as $key => $item)
             <div class="col-md-{{ $item['col'] }} col-sm-12">
@@ -33,18 +33,17 @@
             <table class="table" id="table-wallet">
                 <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" id="check-all-wallet" onchange="chooseAllWallet(this)">
-                        </th>
-                        <th>
-                            <small><b>@lang('view.invoice')</b></small>
-                        </th>
-                        <th>
-                            <small><b>@lang('view.user')</b></small>
-                        </th>
-                        <th>
-                            <small><b>@lang('view.amount')</b></small>
-                        </th>
+                        @foreach ($headers as $item)
+                            @if ($item == 'checkbox')
+                                <th>
+                                    <input type="checkbox" id="check-all-wallet" onchange="chooseAllWallet(this)">
+                                </th>
+                            @else
+                                <th>
+                                    <small><b>{{ $item }}</b></small>
+                                </th>
+                            @endif
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -66,4 +65,4 @@
         dtIntegration();
         reloadWalletDetail("{{ $param_category_id }}");
     </script>
-@endif
+{{-- @endif --}}

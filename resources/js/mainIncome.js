@@ -173,7 +173,6 @@ function updateTotalBackup(e) {
         let id = inputs[a].id;
         val.push(currentVal);
     }
-    console.log('val', val);
     // const sum = val.reduce((partialSum, a) => parseInt(partialSum) + parseInt(a), 0);
     // res = numberWithCommas(sum);
 
@@ -370,7 +369,7 @@ function detailPaidInvoice(paymentId) {
         `printPaidInvoice(${paymentId})`,
         true,
         i18n.view.detail_invoice,
-        null,
+        i18n.view.close,
         i18n.view.print,
     );
 }
@@ -525,14 +524,12 @@ function payInvoiceMonthly() {
         },
         success: function(res) {
             loadingPage(false);
-            console.log('res', res);
             $('.main-content-incomes').html(res.data.view);
             closeModal('invoice-modal');
             showNotif(false, res.message);
             updateUserSaldo();
         },
         error: function(err) {
-            console.log('err', err);
             showNotif(true, err);
             loadingPage(false);
         }
@@ -555,14 +552,12 @@ function saveInvoiceNonPeriod() {
         },
         success: function(res) {
             loadingPage(false);
-            console.log('res', res);
             $('.main-content-incomes').html(res.data.view);
             closeModal('invoice-modal');
             showNotif(false, res.message);
             updateUserSaldo();
         },
         error: function(err) {
-            console.log('err', err);
             showNotif(true, err);
             loadingPage(false);
         }
@@ -599,7 +594,6 @@ function changeIncomeByLevel(
             $('.main-content-incomes').html(res.view);
         },
         error: function(err) {
-            console.log('err', err);
             showNotif(true, err);
             loadingPage(false);
         }
