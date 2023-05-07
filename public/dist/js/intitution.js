@@ -1,1 +1,394 @@
-(()=>{var t={273:(t,e,a)=>{"use strict";a.r(e),a.d(e,{CountUp:()=>i});var n=function(){return(n=Object.assign||function(t){for(var e,a=1,n=arguments.length;a<n;a++)for(var i in e=arguments[a])Object.prototype.hasOwnProperty.call(e,i)&&(t[i]=e[i]);return t}).apply(this,arguments)},i=function(){function t(t,e,a){var i=this;this.endVal=e,this.options=a,this.version="2.3.2",this.defaults={startVal:0,decimalPlaces:0,duration:2,useEasing:!0,useGrouping:!0,smartEasingThreshold:999,smartEasingAmount:333,separator:",",decimal:".",prefix:"",suffix:"",enableScrollSpy:!1,scrollSpyDelay:200,scrollSpyOnce:!1},this.finalEndVal=null,this.useEasing=!0,this.countDown=!1,this.error="",this.startVal=0,this.paused=!0,this.once=!1,this.count=function(t){i.startTime||(i.startTime=t);var e=t-i.startTime;i.remaining=i.duration-e,i.useEasing?i.countDown?i.frameVal=i.startVal-i.easingFn(e,0,i.startVal-i.endVal,i.duration):i.frameVal=i.easingFn(e,i.startVal,i.endVal-i.startVal,i.duration):i.frameVal=i.startVal+(i.endVal-i.startVal)*(e/i.duration);var a=i.countDown?i.frameVal<i.endVal:i.frameVal>i.endVal;i.frameVal=a?i.endVal:i.frameVal,i.frameVal=Number(i.frameVal.toFixed(i.options.decimalPlaces)),i.printValue(i.frameVal),e<i.duration?i.rAF=requestAnimationFrame(i.count):null!==i.finalEndVal?i.update(i.finalEndVal):i.callback&&i.callback()},this.formatNumber=function(t){var e,a,n,s,o=t<0?"-":"";e=Math.abs(t).toFixed(i.options.decimalPlaces);var l=(e+="").split(".");if(a=l[0],n=l.length>1?i.options.decimal+l[1]:"",i.options.useGrouping){s="";for(var r=0,c=a.length;r<c;++r)0!==r&&r%3==0&&(s=i.options.separator+s),s=a[c-r-1]+s;a=s}return i.options.numerals&&i.options.numerals.length&&(a=a.replace(/[0-9]/g,(function(t){return i.options.numerals[+t]})),n=n.replace(/[0-9]/g,(function(t){return i.options.numerals[+t]}))),o+i.options.prefix+a+n+i.options.suffix},this.easeOutExpo=function(t,e,a,n){return a*(1-Math.pow(2,-10*t/n))*1024/1023+e},this.options=n(n({},this.defaults),a),this.formattingFn=this.options.formattingFn?this.options.formattingFn:this.formatNumber,this.easingFn=this.options.easingFn?this.options.easingFn:this.easeOutExpo,this.startVal=this.validateValue(this.options.startVal),this.frameVal=this.startVal,this.endVal=this.validateValue(e),this.options.decimalPlaces=Math.max(this.options.decimalPlaces),this.resetDuration(),this.options.separator=String(this.options.separator),this.useEasing=this.options.useEasing,""===this.options.separator&&(this.options.useGrouping=!1),this.el="string"==typeof t?document.getElementById(t):t,this.el?this.printValue(this.startVal):this.error="[CountUp] target is null or undefined","undefined"!=typeof window&&this.options.enableScrollSpy&&(this.error?console.error(this.error,t):(window.onScrollFns=window.onScrollFns||[],window.onScrollFns.push((function(){return i.handleScroll(i)})),window.onscroll=function(){window.onScrollFns.forEach((function(t){return t()}))},this.handleScroll(this)))}return t.prototype.handleScroll=function(t){if(t&&window&&!t.once){var e=window.innerHeight+window.scrollY,a=t.el.getBoundingClientRect(),n=a.top+a.height+window.pageYOffset;n<e&&n>window.scrollY&&t.paused?(t.paused=!1,setTimeout((function(){return t.start()}),t.options.scrollSpyDelay),t.options.scrollSpyOnce&&(t.once=!0)):window.scrollY>n&&!t.paused&&t.reset()}},t.prototype.determineDirectionAndSmartEasing=function(){var t=this.finalEndVal?this.finalEndVal:this.endVal;this.countDown=this.startVal>t;var e=t-this.startVal;if(Math.abs(e)>this.options.smartEasingThreshold&&this.options.useEasing){this.finalEndVal=t;var a=this.countDown?1:-1;this.endVal=t+a*this.options.smartEasingAmount,this.duration=this.duration/2}else this.endVal=t,this.finalEndVal=null;null!==this.finalEndVal?this.useEasing=!1:this.useEasing=this.options.useEasing},t.prototype.start=function(t){this.error||(this.callback=t,this.duration>0?(this.determineDirectionAndSmartEasing(),this.paused=!1,this.rAF=requestAnimationFrame(this.count)):this.printValue(this.endVal))},t.prototype.pauseResume=function(){this.paused?(this.startTime=null,this.duration=this.remaining,this.startVal=this.frameVal,this.determineDirectionAndSmartEasing(),this.rAF=requestAnimationFrame(this.count)):cancelAnimationFrame(this.rAF),this.paused=!this.paused},t.prototype.reset=function(){cancelAnimationFrame(this.rAF),this.paused=!0,this.resetDuration(),this.startVal=this.validateValue(this.options.startVal),this.frameVal=this.startVal,this.printValue(this.startVal)},t.prototype.update=function(t){cancelAnimationFrame(this.rAF),this.startTime=null,this.endVal=this.validateValue(t),this.endVal!==this.frameVal&&(this.startVal=this.frameVal,null==this.finalEndVal&&this.resetDuration(),this.finalEndVal=null,this.determineDirectionAndSmartEasing(),this.rAF=requestAnimationFrame(this.count))},t.prototype.printValue=function(t){var e=this.formattingFn(t);"INPUT"===this.el.tagName?this.el.value=e:"text"===this.el.tagName||"tspan"===this.el.tagName?this.el.textContent=e:this.el.innerHTML=e},t.prototype.ensureNumber=function(t){return"number"==typeof t&&!isNaN(t)},t.prototype.validateValue=function(t){var e=Number(t);return this.ensureNumber(e)?e:(this.error="[CountUp] invalid start or end value: ".concat(t),null)},t.prototype.resetDuration=function(){this.startTime=null,this.duration=1e3*Number(this.options.duration),this.remaining=this.duration},t}()}},e={};function a(n){var i=e[n];if(void 0!==i)return i.exports;var s=e[n]={exports:{}};return t[n](s,s.exports,a),s.exports}a.d=(t,e)=>{for(var n in e)a.o(e,n)&&!a.o(t,n)&&Object.defineProperty(t,n,{enumerable:!0,get:e[n]})},a.o=(t,e)=>Object.prototype.hasOwnProperty.call(t,e),a.r=t=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},(()=>{var t=a(273).CountUp;function e(t){var e="target-detail-data";t.update&&(e="target-detail-table-data"),$.ajax({type:"POST",url:base_url+"/intitutions/detail-data/intitutions",data:t,beforeSend:function(){$("#"+e).html('\n                <i class="fa fa-spinner fa-2x fa-spin"></i> <br>\n                '.concat(i18n.view.generate_data,"\n            ")).css({textAlign:"center"})},success:function(a){console.log(a),$("#"+e).html(a.view).css({textAlign:"unset"}),null!=t.update&&t.update||($(".filter-class").removeClass("themed-border-default").removeClass("themed-background-default").removeClass("themed-color-white").removeClass("btn-default").addClass("btn-default"),$("#filter-class-"+a.data.data.classes[0].id).removeClass("btn-default").addClass("themed-border-default").addClass("themed-background-default").addClass("themed-color-white")),t.update&&($(".filter-level").removeClass("themed-border-default").removeClass("themed-background-default").removeClass("themed-color-white").removeClass("btn-default").addClass("btn-default"),$("#filter-level-"+a.data.level_id).removeClass("btn-default").addClass("themed-border-default").addClass("themed-background-default").addClass("themed-color-white"))},error:function(t){}})}function n(){e({institution_id:$("#df_institution_id").val(),class_id:$("#df_class_id").val(),level_id:$("#df_level_id").val()})}n(),window.updateForm=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"Update institution",a=base_url+"/intitutions/".concat(t,"/edit"),n=base_url+"/intitutions/".concat(t);$.ajax({type:"GET",url:a,dataType:"json",success:function(t){$("#modalIntitutionLabel").text(e),$("#modalIntitution .modal-body").html(t.view),$("#modalIntitution").modal("show"),$("#form-intitution").attr("action",n),$("#form-intitution").attr("method","PUT")},error:function(t){showNotif(!0,t)}})},window.deleteClassRow=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0;0!=e?sweetAlert({text:i18n.view.delete_text,icon:"warning",buttons:!0,dangerMode:!0,confirmButtonText:i18n.view.confirm_delete}).then((function(e){if(e){var a=$(".level-wrapper-"+t),n=$('input[name="ins['.concat(t,'][class_name]"]')).val(),i={class_name:n,level:[]};if(n)for(var s=0;s<a.length;s++){var o=a[s].id,l=$("#"+o).data("key"),r=$('input[name="ins['.concat(t,"][class][").concat(l,'][level]"]')).val();i.level.push(r)}var c=$("#current_id").val();i.id=c,$.ajax({type:"POST",url:base_url+"/intitutions/delete-class",data:i,beforeSend:function(){loadingPage()},success:function(e){loadingPage(!1),showNotif(!1,e.message),$("#class-wrapper-"+t).remove()},error:function(t){loadingPage(!1),showNotif(!0,t)}})}})):$("#class-wrapper-"+t).remove()},window.deleteLevel=function(t,e){var a=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0;0!=a?sweetAlert({text:i18n.view.delete_text,icon:"warning",buttons:!0,dangerMode:!0,confirmButtonText:i18n.view.confirm_delete}).then((function(a){if(a){$(".level-wrapper-"+t);var n=$('input[name="ins['.concat(e,'][class_name]"]')).val(),i={class_name:n,level:[]};if(n){var s=$('input[name="ins['.concat(e,"][class][").concat(t,'][level]"]')).val();i.level.push(s)}var o=$("#current_id").val();i.id=o,$.ajax({type:"POST",url:base_url+"/intitutions/delete-level",data:i,beforeSend:function(){loadingPage()},success:function(a){loadingPage(!1),showNotif(!1,a.message),$("#level-helper-s-"+t+"-"+e).remove()},error:function(t){loadingPage(!1),showNotif(!0,t)}})}})):$("#level-helper-s-"+t+"-"+e).remove()},window.playCountUp=function(e,a){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:1,i={startVal:0,duration:n,separator:"."},s=new t(a,e,i);s.start()},window.chooseHomeroomTeacher=function(t,e,a){$.ajax({type:"GET",url:base_url+"/intitutions/show-homeroom-teacher?class_id="+t+"&level_id="+e+"&institution_id="+a,success:function(t){$("#modalChooseHomeroom .modal-body #target-form").html(t.view),$("#modalChooseHomeroom").modal("show"),$("#homeroom").chosen({width:"100%"})},error:function(t){showNotif(!0,t)}})},window.initDetailData=n,window.saveHomeroom=function(){var t=$("#form-select-homeroom").serialize();$.ajax({type:"POST",url:base_url+"/intitutions/store-homeroom",data:t,beforeSend:function(){loadingPage(!0,i18n.view.saving)},success:function(t){loadingPage(!1),showNotif(!1,t.message),$("#modalChooseHomeroom").modal("hide"),$("#target-homeroom-teacher").html("\n            <b>".concat(t.data.homeroom,'</b>\n            <a style="cursor: pointer;" onclick="chooseHomeroomTeacher(').concat(t.data.class_id,", ").concat(t.data.level_id,", ").concat(t.data.institution_id,')">').concat(i18n.view.change_homeroom,' <i class="fa fa-share"></i></a>\n            '))},error:function(t){showNotif(!0,t),loadingPage(!1)}})},window.changeLevel=function(t,a,n){e({institution_id:t,class_id:n,level_id:a,update:!0})},window.changeClass=function(t,a){e({institution_id:a,class_id:t,level_id:0})},window.appendLevel=function(t){$(".level-helper-s");var e=$(".class-wrapper"),a=$(".level-wrapper-"+t),n=e.length,i=a.length,s='\n        <div class="col-md-6 level-wrapper-'.concat(t,'" data-key="').concat(i,'" id="level-helper-f-').concat(i,"-").concat(n,'"></div>\n        <div class="col-md-6" id="level-helper-s-').concat(i,"-").concat(n,'">\n            <div class="input-group">\n                <input type="text" id="class_level-').concat(i,"-").concat(t,'" data-key="').concat(i,'" name="ins[').concat(t,"][class][").concat(i,'][level]" class="form-control form-control-sm level-input-').concat(t,'" placeholder="A / B / C / etc" required>\n                <span class="input-group-addon"><i class="gi gi-remove_2" onclick="deleteLevel(').concat(i,", ").concat(n,')" style="color: red; cursor: pointer;"></i></span>\n            </div>\n        </div>\n    ');$("#target-class-level-".concat(t)).append(s),$("#class_level-".concat(i,"-").concat(t)).focus()},window.appendClass=function(t,e){var a=$(".class-wrapper").length,n='\n        <div class="border p-3 mb-3 class-wrapper" id="class-wrapper-'.concat(a,'" style="position: relative; width: 100%;">\n            <span class="gi gi-remove text-danger" onclick="deleteClassRow(').concat(a,')" style="position: absolute; top: -4px; right: -2px; font-size: 18px; cursor: pointer;"></span>\n            <div class="row">\n                <div class="col-md-6 col-sm-12 level-wrapper-').concat(a,'" data-key="0" id="level-helper-f-0-').concat(a,'">\n                    <div class="form-group mb-3">\n                        <label for="class_name" class="control-label">').concat(t,'</label>\n                        <input type="text" name="ins[').concat(a,'][class_name]" data-key="').concat(a,'" placeholder="').concat(t,'" class="form-control form-control-sm class-input-').concat(a,'" id="class_name-').concat(a,'">\n                    </div>\n                </div>\n                <div class="col-md-6 col-sm-12">\n                    <div class="form-group" style="margin-bottom: 0;">\n                        <label for="class_level" class="control-label">').concat(e,'</label>\n                        <div class="input-group">\n                            <input type="text" id="class_level" data-key="0" name="ins[').concat(a,'][class][0][level]" class="form-control form-control-sm level-input-').concat(a,'" placeholder="A / B / C / etc" required>\n                            <span class="input-group-addon"><i class="gi gi-plus" onclick="appendLevel(').concat(a,')" style="cursor: pointer;"></i></span>\n                        </div>\n                    </div>\n                </div>\n                <div id="target-class-level-').concat(a,'"></div>\n            </div>\n        </div>\n    ');$("#target-class").append(n),$("#class_name-".concat(a)).focus()},window.showDetail=e,window.hasClass=function(){if($('input[name="has_class"]')[0].checked){$(".class-container").removeClass("d-none");for(var t=$(".class-wrapper"),e=0;e<t.length;e++)if(0!=e){var a=t[e].id;$("#"+a).remove()}$('input[name="ins[0][class_name]"]').val(""),$('input[name="ins[0][class][0][level]"]').val(""),$("#target-class-level-0").html("");var n=$("#current_id").val();0!=n&&$.ajax({type:"POST",url:base_url+"/intitutions/show-class-level-form",data:{id:n},beforeSend:function(){$("#target-class-level").html('\n                        <i class="fa fa-spinner fa-2x fa-spin"></i> <br>\n                        '.concat(i18n.view.generate_form,"\n                    ")).css({textAlign:"center"})},success:function(t){$("#target-class-level").html(t.view)}})}else $(".class-container").addClass("d-none")}})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/countup.js/dist/countUp.min.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/countup.js/dist/countUp.min.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CountUp": () => (/* binding */ CountUp)
+/* harmony export */ });
+var __assign=undefined&&undefined.__assign||function(){return(__assign=Object.assign||function(t){for(var i,n=1,s=arguments.length;n<s;n++)for(var a in i=arguments[n])Object.prototype.hasOwnProperty.call(i,a)&&(t[a]=i[a]);return t}).apply(this,arguments)},CountUp=function(){function t(t,i,n){var s=this;this.endVal=i,this.options=n,this.version="2.3.2",this.defaults={startVal:0,decimalPlaces:0,duration:2,useEasing:!0,useGrouping:!0,smartEasingThreshold:999,smartEasingAmount:333,separator:",",decimal:".",prefix:"",suffix:"",enableScrollSpy:!1,scrollSpyDelay:200,scrollSpyOnce:!1},this.finalEndVal=null,this.useEasing=!0,this.countDown=!1,this.error="",this.startVal=0,this.paused=!0,this.once=!1,this.count=function(t){s.startTime||(s.startTime=t);var i=t-s.startTime;s.remaining=s.duration-i,s.useEasing?s.countDown?s.frameVal=s.startVal-s.easingFn(i,0,s.startVal-s.endVal,s.duration):s.frameVal=s.easingFn(i,s.startVal,s.endVal-s.startVal,s.duration):s.frameVal=s.startVal+(s.endVal-s.startVal)*(i/s.duration);var n=s.countDown?s.frameVal<s.endVal:s.frameVal>s.endVal;s.frameVal=n?s.endVal:s.frameVal,s.frameVal=Number(s.frameVal.toFixed(s.options.decimalPlaces)),s.printValue(s.frameVal),i<s.duration?s.rAF=requestAnimationFrame(s.count):null!==s.finalEndVal?s.update(s.finalEndVal):s.callback&&s.callback()},this.formatNumber=function(t){var i,n,a,e,r=t<0?"-":"";i=Math.abs(t).toFixed(s.options.decimalPlaces);var o=(i+="").split(".");if(n=o[0],a=o.length>1?s.options.decimal+o[1]:"",s.options.useGrouping){e="";for(var l=0,h=n.length;l<h;++l)0!==l&&l%3==0&&(e=s.options.separator+e),e=n[h-l-1]+e;n=e}return s.options.numerals&&s.options.numerals.length&&(n=n.replace(/[0-9]/g,function(t){return s.options.numerals[+t]}),a=a.replace(/[0-9]/g,function(t){return s.options.numerals[+t]})),r+s.options.prefix+n+a+s.options.suffix},this.easeOutExpo=function(t,i,n,s){return n*(1-Math.pow(2,-10*t/s))*1024/1023+i},this.options=__assign(__assign({},this.defaults),n),this.formattingFn=this.options.formattingFn?this.options.formattingFn:this.formatNumber,this.easingFn=this.options.easingFn?this.options.easingFn:this.easeOutExpo,this.startVal=this.validateValue(this.options.startVal),this.frameVal=this.startVal,this.endVal=this.validateValue(i),this.options.decimalPlaces=Math.max(this.options.decimalPlaces),this.resetDuration(),this.options.separator=String(this.options.separator),this.useEasing=this.options.useEasing,""===this.options.separator&&(this.options.useGrouping=!1),this.el="string"==typeof t?document.getElementById(t):t,this.el?this.printValue(this.startVal):this.error="[CountUp] target is null or undefined","undefined"!=typeof window&&this.options.enableScrollSpy&&(this.error?console.error(this.error,t):(window.onScrollFns=window.onScrollFns||[],window.onScrollFns.push(function(){return s.handleScroll(s)}),window.onscroll=function(){window.onScrollFns.forEach(function(t){return t()})},this.handleScroll(this)))}return t.prototype.handleScroll=function(t){if(t&&window&&!t.once){var i=window.innerHeight+window.scrollY,n=t.el.getBoundingClientRect(),s=n.top+n.height+window.pageYOffset;s<i&&s>window.scrollY&&t.paused?(t.paused=!1,setTimeout(function(){return t.start()},t.options.scrollSpyDelay),t.options.scrollSpyOnce&&(t.once=!0)):window.scrollY>s&&!t.paused&&t.reset()}},t.prototype.determineDirectionAndSmartEasing=function(){var t=this.finalEndVal?this.finalEndVal:this.endVal;this.countDown=this.startVal>t;var i=t-this.startVal;if(Math.abs(i)>this.options.smartEasingThreshold&&this.options.useEasing){this.finalEndVal=t;var n=this.countDown?1:-1;this.endVal=t+n*this.options.smartEasingAmount,this.duration=this.duration/2}else this.endVal=t,this.finalEndVal=null;null!==this.finalEndVal?this.useEasing=!1:this.useEasing=this.options.useEasing},t.prototype.start=function(t){this.error||(this.callback=t,this.duration>0?(this.determineDirectionAndSmartEasing(),this.paused=!1,this.rAF=requestAnimationFrame(this.count)):this.printValue(this.endVal))},t.prototype.pauseResume=function(){this.paused?(this.startTime=null,this.duration=this.remaining,this.startVal=this.frameVal,this.determineDirectionAndSmartEasing(),this.rAF=requestAnimationFrame(this.count)):cancelAnimationFrame(this.rAF),this.paused=!this.paused},t.prototype.reset=function(){cancelAnimationFrame(this.rAF),this.paused=!0,this.resetDuration(),this.startVal=this.validateValue(this.options.startVal),this.frameVal=this.startVal,this.printValue(this.startVal)},t.prototype.update=function(t){cancelAnimationFrame(this.rAF),this.startTime=null,this.endVal=this.validateValue(t),this.endVal!==this.frameVal&&(this.startVal=this.frameVal,null==this.finalEndVal&&this.resetDuration(),this.finalEndVal=null,this.determineDirectionAndSmartEasing(),this.rAF=requestAnimationFrame(this.count))},t.prototype.printValue=function(t){var i=this.formattingFn(t);"INPUT"===this.el.tagName?this.el.value=i:"text"===this.el.tagName||"tspan"===this.el.tagName?this.el.textContent=i:this.el.innerHTML=i},t.prototype.ensureNumber=function(t){return"number"==typeof t&&!isNaN(t)},t.prototype.validateValue=function(t){var i=Number(t);return this.ensureNumber(i)?i:(this.error="[CountUp] invalid start or end value: ".concat(t),null)},t.prototype.resetDuration=function(){this.startTime=null,this.duration=1e3*Number(this.options.duration),this.remaining=this.duration},t}();
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!************************************!*\
+  !*** ./resources/js/intitution.js ***!
+  \************************************/
+var _require = __webpack_require__(/*! countup.js */ "./node_modules/countup.js/dist/countUp.min.js"),
+  CountUp = _require.CountUp;
+initDetailData();
+function playCountUp(number, target) {
+  var duration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+  var countUpOption = {
+    startVal: 0,
+    duration: duration,
+    separator: '.'
+  };
+  var countUp = new CountUp(target, number, countUpOption);
+  countUp.start();
+}
+function updateForm(id) {
+  var createText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Update institution';
+  var url = base_url + "/intitutions/".concat(id, "/edit");
+  var storeUrl = base_url + "/intitutions/".concat(id);
+  $.ajax({
+    type: "GET",
+    url: url,
+    dataType: 'json',
+    success: function success(res) {
+      $('#modalIntitutionLabel').text(createText);
+      $('#modalIntitution .modal-body').html(res.view);
+      $('#modalIntitution').modal('show');
+      $('#form-intitution').attr('action', storeUrl);
+      $('#form-intitution').attr('method', "PUT");
+    },
+    error: function error(err) {
+      showNotif(true, err);
+    }
+  });
+}
+function deleteLevelB(id, classId) {
+  var className = $("input[name=\"ins[".concat(classId, "][class_name]\"]")).val();
+  var levelName = $("input[name=\"ins[".concat(classId, "][class][").concat(id, "][level]\"]")).val();
+  var format = {
+    class_name: className,
+    level: [levelName]
+  };
+  $("#level-helper-f-".concat(id, "-").concat(classId)).remove();
+  $("#level-helper-s-".concat(id, "-").concat(classId)).remove();
+}
+function deleteClassRow(id) {
+  var institutionId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  if (institutionId != 0) {
+    sweetAlert({
+      text: i18n.view.delete_text,
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      confirmButtonText: i18n.view.confirm_delete
+    }).then(function (willDelete) {
+      if (willDelete) {
+        var levelWrapper = $('.level-wrapper-' + id);
+        var className = $("input[name=\"ins[".concat(id, "][class_name]\"]")).val();
+        var format = {
+          class_name: className,
+          level: []
+        };
+        if (className) {
+          for (var a = 0; a < levelWrapper.length; a++) {
+            var ids = levelWrapper[a].id;
+            var levelId = $('#' + ids).data('key');
+            var levelName = $("input[name=\"ins[".concat(id, "][class][").concat(levelId, "][level]\"]")).val();
+            format.level.push(levelName);
+          }
+        }
+        var ins_id = $('#current_id').val();
+        format.id = ins_id;
+        $.ajax({
+          type: 'POST',
+          url: base_url + '/intitutions/delete-class',
+          data: format,
+          beforeSend: function beforeSend() {
+            loadingPage();
+          },
+          success: function success(res) {
+            loadingPage(false);
+            showNotif(false, res.message);
+            $('#class-wrapper-' + id).remove();
+          },
+          error: function error(err) {
+            loadingPage(false);
+            showNotif(true, err);
+          }
+        });
+      }
+    });
+  } else {
+    $('#class-wrapper-' + id).remove();
+  }
+}
+function deleteLevel(id, classId) {
+  var institutionId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  if (institutionId != 0) {
+    sweetAlert({
+      text: i18n.view.delete_text,
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      confirmButtonText: i18n.view.confirm_delete
+    }).then(function (willDelete) {
+      if (willDelete) {
+        var levelWrapper = $('.level-wrapper-' + id);
+        var className = $("input[name=\"ins[".concat(classId, "][class_name]\"]")).val();
+        var format = {
+          class_name: className,
+          level: []
+        };
+        if (className) {
+          var levelName = $("input[name=\"ins[".concat(classId, "][class][").concat(id, "][level]\"]")).val();
+          format.level.push(levelName);
+        }
+        var ins_id = $('#current_id').val();
+        format.id = ins_id;
+        $.ajax({
+          type: 'POST',
+          url: base_url + '/intitutions/delete-level',
+          data: format,
+          beforeSend: function beforeSend() {
+            loadingPage();
+          },
+          success: function success(res) {
+            loadingPage(false);
+            showNotif(false, res.message);
+            $('#level-helper-s-' + id + '-' + classId).remove();
+          },
+          error: function error(err) {
+            loadingPage(false);
+            showNotif(true, err);
+          }
+        });
+      }
+    });
+  } else {
+    $('#level-helper-s-' + id + '-' + classId).remove();
+  }
+}
+function showDetail(param) {
+  var targetLoad = 'target-detail-data';
+  if (param.update) {
+    targetLoad = 'target-detail-table-data';
+  }
+  $.ajax({
+    type: 'POST',
+    url: base_url + '/intitutions/detail-data/intitutions',
+    data: param,
+    beforeSend: function beforeSend() {
+      $('#' + targetLoad).html("\n                <i class=\"fa fa-spinner fa-2x fa-spin\"></i> <br>\n                ".concat(i18n.view.generate_data, "\n            ")).css({
+        'textAlign': 'center'
+      });
+    },
+    success: function success(res) {
+      console.log(res);
+      $('#' + targetLoad).html(res.view).css({
+        'textAlign': 'unset'
+      });
+      if (param.update == undefined || !param.update) {
+        // set filter class active
+        $('.filter-class').removeClass('themed-border-default').removeClass('themed-background-default').removeClass('themed-color-white').removeClass('btn-default').addClass('btn-default');
+        $('#filter-class-' + res.data.data.classes[0].id).removeClass('btn-default').addClass('themed-border-default').addClass('themed-background-default').addClass('themed-color-white');
+      }
+      if (param.update) {
+        $('.filter-level').removeClass('themed-border-default').removeClass('themed-background-default').removeClass('themed-color-white').removeClass('btn-default').addClass('btn-default');
+        $('#filter-level-' + res.data.level_id).removeClass('btn-default').addClass('themed-border-default').addClass('themed-background-default').addClass('themed-color-white');
+      }
+    },
+    error: function error(err) {}
+  });
+}
+function chooseHomeroomTeacher(classId, levelId, institutionId) {
+  $.ajax({
+    type: 'GET',
+    url: base_url + '/intitutions/show-homeroom-teacher?class_id=' + classId + '&level_id=' + levelId + '&institution_id=' + institutionId,
+    success: function success(res) {
+      $('#modalChooseHomeroom .modal-body #target-form').html(res.view);
+      $('#modalChooseHomeroom').modal('show');
+      $('#homeroom').chosen({
+        width: '100%'
+      });
+    },
+    error: function error(err) {
+      showNotif(true, err);
+    }
+  });
+}
+function saveHomeroom() {
+  var form = $('#form-select-homeroom');
+  var data = form.serialize();
+  $.ajax({
+    type: 'POST',
+    url: base_url + '/intitutions/store-homeroom',
+    data: data,
+    beforeSend: function beforeSend() {
+      loadingPage(true, i18n.view.saving);
+    },
+    success: function success(res) {
+      loadingPage(false);
+      showNotif(false, res.message);
+      $('#modalChooseHomeroom').modal('hide');
+      $('#target-homeroom-teacher').html("\n            <b>".concat(res.data.homeroom, "</b>\n            <a style=\"cursor: pointer;\" onclick=\"chooseHomeroomTeacher(").concat(res.data.class_id, ", ").concat(res.data.level_id, ", ").concat(res.data.institution_id, ")\">").concat(i18n.view.change_homeroom, " <i class=\"fa fa-share\"></i></a>\n            "));
+    },
+    error: function error(err) {
+      showNotif(true, err);
+      loadingPage(false);
+    }
+  });
+}
+function initDetailData() {
+  var institutionId = $('#df_institution_id').val();
+  var classId = $('#df_class_id').val();
+  var levelId = $('#df_level_id').val();
+  var param = {
+    institution_id: institutionId,
+    class_id: classId,
+    level_id: levelId
+  };
+  showDetail(param);
+}
+function changeLevel(institutionId, levelId, classId) {
+  // target-detail-table-data
+  var param = {
+    institution_id: institutionId,
+    class_id: classId,
+    level_id: levelId,
+    update: true
+  };
+  showDetail(param);
+}
+function changeClass(classId, institutionId) {
+  var param = {
+    institution_id: institutionId,
+    class_id: classId,
+    level_id: 0
+  };
+  showDetail(param);
+}
+function appendLevel(classId) {
+  var current = $('.level-helper-s');
+  var classWrapper = $('.class-wrapper');
+  var levelWrapper = $('.level-wrapper-' + classId);
+  var classLen = classWrapper.length;
+  var len = levelWrapper.length;
+  var elem = "\n        <div class=\"col-md-6 level-wrapper-".concat(classId, "\" data-key=\"").concat(len, "\" id=\"level-helper-f-").concat(len, "-").concat(classLen, "\"></div>\n        <div class=\"col-md-6\" id=\"level-helper-s-").concat(len, "-").concat(classLen, "\">\n            <div class=\"input-group\">\n                <input type=\"text\" id=\"class_level-").concat(len, "-").concat(classId, "\" data-key=\"").concat(len, "\" name=\"ins[").concat(classId, "][class][").concat(len, "][level]\" class=\"form-control form-control-sm level-input-").concat(classId, "\" placeholder=\"A / B / C / etc\" required>\n                <span class=\"input-group-addon\"><i class=\"gi gi-remove_2\" onclick=\"deleteLevel(").concat(len, ", ").concat(classLen, ")\" style=\"color: red; cursor: pointer;\"></i></span>\n            </div>\n        </div>\n    ");
+  $("#target-class-level-".concat(classId)).append(elem);
+  $("#class_level-".concat(len, "-").concat(classId)).focus();
+}
+function appendClass(labelName, labelLevel) {
+  var elems = $('.class-wrapper');
+  var len = elems.length;
+  var form = "\n        <div class=\"border p-3 mb-3 class-wrapper\" id=\"class-wrapper-".concat(len, "\" style=\"position: relative; width: 100%;\">\n            <span class=\"gi gi-remove text-danger\" onclick=\"deleteClassRow(").concat(len, ")\" style=\"position: absolute; top: -4px; right: -2px; font-size: 18px; cursor: pointer;\"></span>\n            <div class=\"row\">\n                <div class=\"col-md-6 col-sm-12 level-wrapper-").concat(len, "\" data-key=\"0\" id=\"level-helper-f-0-").concat(len, "\">\n                    <div class=\"form-group mb-3\">\n                        <label for=\"class_name\" class=\"control-label\">").concat(labelName, "</label>\n                        <input type=\"text\" name=\"ins[").concat(len, "][class_name]\" data-key=\"").concat(len, "\" placeholder=\"").concat(labelName, "\" class=\"form-control form-control-sm class-input-").concat(len, "\" id=\"class_name-").concat(len, "\">\n                    </div>\n                </div>\n                <div class=\"col-md-6 col-sm-12\">\n                    <div class=\"form-group\" style=\"margin-bottom: 0;\">\n                        <label for=\"class_level\" class=\"control-label\">").concat(labelLevel, "</label>\n                        <div class=\"input-group\">\n                            <input type=\"text\" id=\"class_level\" data-key=\"0\" name=\"ins[").concat(len, "][class][0][level]\" class=\"form-control form-control-sm level-input-").concat(len, "\" placeholder=\"A / B / C / etc\" required>\n                            <span class=\"input-group-addon\"><i class=\"gi gi-plus\" onclick=\"appendLevel(").concat(len, ")\" style=\"cursor: pointer;\"></i></span>\n                        </div>\n                    </div>\n                </div>\n                <div id=\"target-class-level-").concat(len, "\"></div>\n            </div>\n        </div>\n    ");
+  $('#target-class').append(form);
+  $("#class_name-".concat(len)).focus();
+}
+function hasClass() {
+  var elem = $('input[name="has_class"]')[0].checked;
+  if (elem) {
+    $('.class-container').removeClass('d-none');
+    var all = $('.class-wrapper');
+    for (var a = 0; a < all.length; a++) {
+      if (a != 0) {
+        var id = all[a].id;
+        $('#' + id).remove();
+      }
+    }
+    $('input[name="ins[0][class_name]"]').val('');
+    $('input[name="ins[0][class][0][level]"]').val('');
+    $('#target-class-level-0').html('');
+
+    /**
+     * manipulate form when user in edit mode
+     * default value for current_id is 0
+     * so, when current_id is not null, this function should be run
+     */
+    var current_id = $('#current_id').val();
+    if (current_id != 0) {
+      $.ajax({
+        type: 'POST',
+        url: base_url + '/intitutions/show-class-level-form',
+        data: {
+          id: current_id
+        },
+        beforeSend: function beforeSend() {
+          $('#target-class-level').html("\n                        <i class=\"fa fa-spinner fa-2x fa-spin\"></i> <br>\n                        ".concat(i18n.view.generate_form, "\n                    ")).css({
+            'textAlign': 'center'
+          });
+        },
+        success: function success(res) {
+          $('#target-class-level').html(res.view);
+        }
+      });
+    }
+  } else {
+    $('.class-container').addClass('d-none');
+  }
+}
+window.updateForm = updateForm;
+window.deleteClassRow = deleteClassRow;
+window.deleteLevel = deleteLevel;
+window.playCountUp = playCountUp;
+window.chooseHomeroomTeacher = chooseHomeroomTeacher;
+window.initDetailData = initDetailData;
+window.saveHomeroom = saveHomeroom;
+window.changeLevel = changeLevel;
+window.changeClass = changeClass;
+window.appendLevel = appendLevel;
+window.appendClass = appendClass;
+window.showDetail = showDetail;
+window.hasClass = hasClass;
+})();
+
+/******/ })()
+;

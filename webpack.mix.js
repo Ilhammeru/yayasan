@@ -18,7 +18,7 @@ mix.setPublicPath('public')
     .js('resources/js/proposal.js', 'dist/js')
     .js('resources/views/layouts/js/app.js', 'assets/js')
     .webpackConfig({
-        mode: 'production',
+        mode: 'development',
         optimization: {
             sideEffects: false
         }

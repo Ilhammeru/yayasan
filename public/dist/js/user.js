@@ -1,1 +1,200 @@
-window.createUser=function(e,t){openModalWithValue("GET","form-user","modalUser","modalUserLabel",e,base_url+"/users/create/"+t)},window.updateForm=function(e,t,a){openModalWithValue("GET","form-user","modalUser","modalUserLabel",t,base_url+"/users/"+e+"/edit/"+a)},window.saveItem=function(){var e=$("#form-user"),t=new FormData($("#form-user")[0]),a=e.attr("method"),s=e.attr("action"),n=0;$("#status").prop("checked")&&(n=1),t.append("status",n),$.ajax({type:a,url:s,data:t,contentType:!1,processData:!1,beforeSend:function(){disableButton("btn-save"),disableButton("btn-cancel")},success:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!1,e.message),closeModal("modalUser"),dt_user.ajax.reload()},error:function(e){disableButton("btn-save",!1),disableButton("btn-cancel",!1),showNotif(!0,e)}})},window.getClasses=function(e){var t=e.value;$.ajax({type:"POST",url:base_url+"/get-class",data:{institution_id:t},beforeSend:function(){$("#institution_class_id").chosen("destroy"),$("#institution_class_id").prop("disabled",!0),$("#institution_class_id").html(""),$("#institution_class_level_id").chosen("destroy"),$("#institution_class_level_id").html(""),$("#institution_class_level_id").prop("disabled",!0)},success:function(e){console.log("rssses",e);for(var t=e.data,a="<option></option>",s=0;s<t.length;s++)a+='<option value="'.concat(t[s].id,'">').concat(t[s].name,"</option>");$("#institution_class_id").html(a),$("#institution_class_id").prop("disabled",!1),$("#institution_class_id").chosen({width:"100%"})},error:function(e){showNotif(!0,e)}})},window.getLevels=function(e){var t=e.value;$.ajax({type:"POST",url:base_url+"/get-level",data:{class_id:t},beforeSend:function(){$("#institution_class_level_id").chosen("destroy"),$("#institution_class_level_id").html(""),$("#institution_class_level_id").prop("disabled",!0)},success:function(e){for(var t=e.data,a="<option></option>",s=0;s<t.length;s++)a+='<option value="'.concat(t[s].id,'">').concat(t[s].name,"</option>");$("#institution_class_level_id").prop("disabled",!1),$("#institution_class_level_id").html(a),$("#institution_class_level_id").chosen({width:"100%"})},error:function(e){setNotif(!0,e.responseJSON)}})},window.selectImage=function(){$("#user-image").click()},window.showImage=function(e){var t=new FileReader;t.onload=function(){$("#preview-image").css({backgroundImage:"url(".concat(t.result,")")})},t.readAsDataURL(e.target.files[0]),$("#icon-action-image").removeClass("fa-camera"),$("#icon-action-image").addClass("fa-times"),$("#icon-action-image").css({color:"red"}),$("#icon-action-image").attr("onclick","removePreviewImage()")},window.removePreviewImage=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;$("#preview-image").css({backgroundImage:"url(../../assets/img/blank.png)"}),$("#icon-action-image").addClass("fa-camera"),$("#icon-action-image").removeClass("fa-times"),$("#icon-action-image").attr("onclick","selectImage()"),$("#icon-action-image").css({color:"black"}),$("#user-image").val(""),e&&$("#is_delete_image").val(1)},window.showProfile=function(e,t,a){var s=base_url+"/users/"+t+"/"+e+"/show";openModalWithValue("GET","form-user","modalUser","modalUserLabel",a,s,null,!0)},window.deleteItem=function(e,t,a){var s=base_url+"/users/".concat(e,"/").concat(a);deleteMaster(t,"Yes! Delete it","Cancel",s,dt_user)},window.appendTableFilter=function(e,t,a){$("#table-users_filter").html('\n            <div class="row">\n                <div class="col-md-4">\n                    <div class="">\n                        <input class="form-control" id="all-search" placeholder="'.concat(i18n.view.search_anything,'" style="width: 100%;">\n                    </div>\n                </div>\n                <div class="col-md-4">\n                    <div class="">\n                        <select class="form-control" data-placeholder="').concat(i18n.view.search_user_type,'" id="user-type-search"\n                            style="width: 100%;">\n                            <option></option>\n                            <option value="all">').concat(i18n.view.all,'</option>\n                            <option value="2">').concat(i18n.view.goverment,'</option>\n                            <option value="1">').concat(i18n.view.public,'</option>\n                        </select>\n                    </div>\n                </div>\n                <div class="col-md-4">\n                    <div class="">\n                        <select class="form-control" data-placeholder="').concat(i18n.view.search_user_status,'" id="user-status-search"\n                            style="width: 100%;">\n                            <option></option>\n                            <option value="all">').concat(i18n.view.all,'</option>\n                            <option value="active">').concat(i18n.view.active,'</option>\n                            <option value="inactive">').concat(i18n.view.inactive,"</option>\n                        </select>\n                    </div>\n                </div>\n            </div>\n        "))},window.searchUserType=function(e){for(var t=$(".user-type-option"),a=0;a<t.length;a++)t[a].classList.remove("active");$("#search-type-".concat(e)).addClass("active"),dt_user=createDataTables("table-users",columns,dt_route,{user_type:e,status:$("#search-user-status").val(),name:$("#search-all").val()})},window.searchStatus=function(e){var t=e.value,a=$(".user-type-option.active").data("type");dt_user=createDataTables("table-users",columns,dt_route,{user_type:a,status:t,name:$("#search-all").val()})},window.searchAll=function(e){var t=e.value,a=$(".user-type-option.active").data("type");dt_user=createDataTables("table-users",columns,dt_route,{user_type:a,status:$("#search-user-status").val(),name:t})};
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!******************************!*\
+  !*** ./resources/js/user.js ***!
+  \******************************/
+function createUser(text, type) {
+  openModalWithValue('GET', 'form-user', 'modalUser', 'modalUserLabel', text, base_url + '/users/create/' + type);
+}
+function updateForm(id, text, type) {
+  openModalWithValue('GET', 'form-user', 'modalUser', 'modalUserLabel', text, base_url + '/users/' + id + '/edit' + '/' + type);
+}
+function appendTableFilter(allText, userTypeText, userStatusText) {
+  $('#table-users_filter').html("\n            <div class=\"row\">\n                <div class=\"col-md-4\">\n                    <div class=\"\">\n                        <input class=\"form-control\" id=\"all-search\" placeholder=\"".concat(i18n.view.search_anything, "\" style=\"width: 100%;\">\n                    </div>\n                </div>\n                <div class=\"col-md-4\">\n                    <div class=\"\">\n                        <select class=\"form-control\" data-placeholder=\"").concat(i18n.view.search_user_type, "\" id=\"user-type-search\"\n                            style=\"width: 100%;\">\n                            <option></option>\n                            <option value=\"all\">").concat(i18n.view.all, "</option>\n                            <option value=\"2\">").concat(i18n.view.goverment, "</option>\n                            <option value=\"1\">").concat(i18n.view["public"], "</option>\n                        </select>\n                    </div>\n                </div>\n                <div class=\"col-md-4\">\n                    <div class=\"\">\n                        <select class=\"form-control\" data-placeholder=\"").concat(i18n.view.search_user_status, "\" id=\"user-status-search\"\n                            style=\"width: 100%;\">\n                            <option></option>\n                            <option value=\"all\">").concat(i18n.view.all, "</option>\n                            <option value=\"active\">").concat(i18n.view.active, "</option>\n                            <option value=\"inactive\">").concat(i18n.view.inactive, "</option>\n                        </select>\n                    </div>\n                </div>\n            </div>\n        "));
+}
+function saveItem() {
+  var form = $('#form-user');
+  var data = new FormData($('#form-user')[0]);
+  var method = form.attr('method');
+  var url = form.attr('action');
+  var status = 0;
+  if ($('#status').prop('checked')) {
+    status = 1;
+  }
+  data.append('status', status);
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    contentType: false,
+    processData: false,
+    beforeSend: function beforeSend() {
+      disableButton('btn-save');
+      disableButton('btn-cancel');
+    },
+    success: function success(res) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(false, res.message);
+      closeModal('modalUser');
+      dt_user.ajax.reload();
+    },
+    error: function error(err) {
+      disableButton('btn-save', false);
+      disableButton('btn-cancel', false);
+      showNotif(true, err);
+    }
+  });
+}
+function getClasses(e) {
+  var val = e.value;
+  $.ajax({
+    type: 'POST',
+    url: base_url + '/get-class',
+    data: {
+      institution_id: val
+    },
+    beforeSend: function beforeSend() {
+      $('#institution_class_id').chosen('destroy');
+      $('#institution_class_id').prop('disabled', true);
+      $('#institution_class_id').html('');
+      $('#institution_class_level_id').chosen('destroy');
+      $('#institution_class_level_id').html('');
+      $('#institution_class_level_id').prop('disabled', true);
+    },
+    success: function success(res) {
+      console.log('rssses', res);
+      var data = res.data;
+      var option = "<option></option>";
+      for (var a = 0; a < data.length; a++) {
+        option += "<option value=\"".concat(data[a].id, "\">").concat(data[a].name, "</option>");
+      }
+      $('#institution_class_id').html(option);
+      $('#institution_class_id').prop('disabled', false);
+      $('#institution_class_id').chosen({
+        width: '100%'
+      });
+    },
+    error: function error(err) {
+      showNotif(true, err);
+    }
+  });
+}
+function getLevels(e) {
+  var val = e.value;
+  $.ajax({
+    type: 'POST',
+    url: base_url + '/get-level',
+    data: {
+      class_id: val
+    },
+    beforeSend: function beforeSend() {
+      $('#institution_class_level_id').chosen('destroy');
+      $('#institution_class_level_id').html('');
+      $('#institution_class_level_id').prop('disabled', true);
+    },
+    success: function success(res) {
+      var data = res.data;
+      var option = "<option></option>";
+      for (var a = 0; a < data.length; a++) {
+        option += "<option value=\"".concat(data[a].id, "\">").concat(data[a].name, "</option>");
+      }
+      $('#institution_class_level_id').prop('disabled', false);
+      $('#institution_class_level_id').html(option);
+      $('#institution_class_level_id').chosen({
+        width: '100%'
+      });
+    },
+    error: function error(err) {
+      setNotif(true, err.responseJSON);
+    }
+  });
+}
+function selectImage() {
+  $('#user-image').click();
+}
+function showImage(event) {
+  var reader = new FileReader();
+  reader.onload = function () {
+    $('#preview-image').css({
+      'backgroundImage': "url(".concat(reader.result, ")")
+    });
+  };
+  reader.readAsDataURL(event.target.files[0]);
+  $('#icon-action-image').removeClass("fa-camera");
+  $('#icon-action-image').addClass("fa-times");
+  $('#icon-action-image').css({
+    'color': 'red'
+  });
+  $('#icon-action-image').attr('onclick', 'removePreviewImage()');
+}
+function removePreviewImage() {
+  var edit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  $('#preview-image').css({
+    'backgroundImage': 'url(../../assets/img/blank.png)'
+  });
+  $('#icon-action-image').addClass("fa-camera");
+  $('#icon-action-image').removeClass("fa-times");
+  $('#icon-action-image').attr('onclick', 'selectImage()');
+  $('#icon-action-image').css({
+    'color': 'black'
+  });
+  $('#user-image').val('');
+  if (edit) {
+    $('#is_delete_image').val(1);
+  }
+}
+function showProfile(type, id, text) {
+  var url = base_url + '/users/' + id + '/' + type + '/show';
+  openModalWithValue('GET', 'form-user', 'modalUser', 'modalUserLabel', text, url, null, true);
+}
+function deleteItem(id, text, type) {
+  var url = base_url + "/users/".concat(id, "/").concat(type);
+  deleteMaster(text, 'Yes! Delete it', 'Cancel', url, dt_user);
+}
+function searchUserType(type) {
+  var elems = $('.user-type-option');
+  for (var a = 0; a < elems.length; a++) {
+    elems[a].classList.remove('active');
+  }
+  $("#search-type-".concat(type)).addClass('active');
+  dt_user = createDataTables('table-users', columns, dt_route, {
+    user_type: type,
+    status: $('#search-user-status').val(),
+    name: $('#search-all').val()
+  });
+}
+function searchStatus(e) {
+  var val = e.value;
+  var activeType = $('.user-type-option.active').data('type');
+  dt_user = createDataTables('table-users', columns, dt_route, {
+    user_type: activeType,
+    status: val,
+    name: $('#search-all').val()
+  });
+}
+function searchAll(e) {
+  var val = e.value;
+  var activeType = $('.user-type-option.active').data('type');
+  dt_user = createDataTables('table-users', columns, dt_route, {
+    user_type: activeType,
+    status: $('#search-user-status').val(),
+    name: val
+  });
+}
+window.createUser = createUser;
+window.updateForm = updateForm;
+window.saveItem = saveItem;
+window.getClasses = getClasses;
+window.getLevels = getLevels;
+window.selectImage = selectImage;
+window.showImage = showImage;
+window.removePreviewImage = removePreviewImage;
+window.showProfile = showProfile;
+window.deleteItem = deleteItem;
+window.appendTableFilter = appendTableFilter;
+window.searchUserType = searchUserType;
+window.searchStatus = searchStatus;
+window.searchAll = searchAll;
+/******/ })()
+;
